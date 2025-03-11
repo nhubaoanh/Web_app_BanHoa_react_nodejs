@@ -1,0 +1,9 @@
+.carousel {
+    max-width: 1250px; /* Điều chỉnh kích thước tối đa của slider */
+    margin: auto; /* Căn giữa slider */
+  }
+  
+  .carousel-inner > img {
+    height: 300px; /* Điều chỉnh chiều cao của ảnh */
+    object-fit: cover; /* Đảm bảo ảnh không bị méo */
+  }

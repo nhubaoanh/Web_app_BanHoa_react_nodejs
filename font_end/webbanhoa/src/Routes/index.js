@@ -1,8 +1,13 @@
 import LayoutDefault from "../Layout/LayoutDefault";
+import NotFound from "../Layout/NotFound";
 import Cart from "../Pages/Cart";
 import Home from "../Pages/Home";
 import Login from "../Pages/Login";
 import Register from "../Pages/Register";
+import Paypay from "../Pages/Paypay";
+import Product from "../Pages/Manage/Product";
+import LayoutAdmin from "../components/LayoutAdmin";
+
 
 export const routes = [
   {
@@ -10,7 +15,7 @@ export const routes = [
     element: <LayoutDefault />,
     children: [
       {
-        path: "/",
+        path: "home",
         element: <Home/>,
       }, {
         path: "cart",
@@ -24,6 +29,26 @@ export const routes = [
         path: "register",
         element: <Register/>,
       },
+      {
+        path : "pay",
+        element : <Paypay/>
+      }
+      
     ],
+  },
+  // Routes for admin
+  {
+    path: "/admin",
+    element: <LayoutAdmin/>,
+    children: [
+      {
+        path: "product",
+        element: <Product />
+      }
+    ],
+  },
+  {
+    path: "*",
+    element: <NotFound/>
   },
 ];

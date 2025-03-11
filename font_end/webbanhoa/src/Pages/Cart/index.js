@@ -1,33 +1,39 @@
-import { useEffect, useState } from "react"
-
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 const Cart = () => {
-    const [cartItems, setCartItems] = useState([]);
+  const [cartItems, setCartItems] = useState([]);
 
-    // lấy thông tin sản phẩm từ local
-    useEffect(() => {
-        const items = JSON.parse(localStorage.getItem("cartItems")) || [];
-        setCartItems(items);
-    }, []);
+  // Lấy thông tin sản phẩm từ localStorage
+  useEffect(() => {
+    const items = JSON.parse(localStorage.getItem("cartItems")) || [];
+    setCartItems(items);
+  }, []);
+
+  // Tính tổng số tiền của các sản phẩm trong giỏ hàng
+  const totalAmount = cartItems.reduce((total, item) => {
+    return total + item.GiaBan * (item.quantity || 1);
+  }, 0);
+
   return (
     <div>
       <section className="h-100">
         <div className="container h-100 py-5">
-            <div className="row d-flex justify-content-center align-items-center h-100">
+          <div className="row d-flex justify-content-center align-items-center h-100">
             <div className="col-10">
-                <div className="d-flex justify-content-between align-items-center mb-4">
+              <div className="d-flex justify-content-between align-items-center mb-4">
                 <h3 className="fw-normal mb-0">Shopping Cart</h3>
                 <div>
-                    <p className="mb-0">
+                  <p className="mb-0">
                     <span className="text-muted">Sort by:</span>{" "}
                     <a href="#!" className="text-body">
-                        price <i className="fas fa-angle-down mt-1" />
+                      price <i className="fas fa-angle-down mt-1" />
                     </a>
-                    </p>
+                  </p>
                 </div>
-                </div>
+              </div>
 
-                {cartItems.map((item) => (
+              {cartItems.map((item) => (
                 <div className="card rounded-3 mb-4" key={item.MaSanPham}>
                   <div className="card-body p-4">
                     <div className="row d-flex justify-content-between align-items-center">
@@ -109,15 +115,25 @@ const Cart = () => {
                   </div>
                 </div>
               ))}
-                
+
+              {/* Hiển thị tổng số tiền và nút thanh toán */}
+              <div className="card text-end">
+                <div className="card-body">
+                  <h5 className="mb-0">Total Amount: ${totalAmount}</h5>
+                  <button className="btn btn-primary mt-3">
+                    <Link className="nav-link" to="/pay">
+                    Proceed to Checkout
+                    </Link>
+                  </button>
+                </div>
+              </div>
+              
             </div>
-            </div>
+          </div>
         </div>
-    </section>
-
-
+      </section>
     </div>
-  )
-}
+  );
+};
 
-export default Cart
+export default Cart;

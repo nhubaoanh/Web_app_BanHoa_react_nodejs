@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import api from "../../services/api";
 import Modal from "../../Layout/Modal";
 import { Link } from "react-router-dom";
+import './Home.css'
 
 
 const Home = () => {

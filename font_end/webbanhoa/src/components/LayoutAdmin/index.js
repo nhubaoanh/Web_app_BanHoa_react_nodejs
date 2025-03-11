@@ -1,24 +1,25 @@
 import { Outlet } from "react-router-dom";
-import Footer from "../Footers";
-import Headers from "../Headers";
+import React from 'react'
+import Admin from "../../Layout/Admin";
 
-
-function LayoutDefault() {
+const LayoutAdmin = () => {
   return (
-    <>
+    <div>
+      <>
       <header>
-        <Headers/>
+        <Admin/>
       </header>
-      <main>
+      <div className="main-admin">
         {/* cho phép bạn xây dựng các layout có cấu trúc định tuyến lồng nhau,
          giúp quản lý và hiển thị các component 
         con một cách linh hoạt dựa trên cấu hình route của bạn. */}
-        <Outlet />
-      </main>
+        <Outlet  />
+      </div>
       <footer>
-        <Footer/>
       </footer>
     </>
-  );
+    </div>
+  )
 }
-export default LayoutDefault;
+
+export default LayoutAdmin

@@ -33,7 +33,7 @@ const Home = () => {
       <div className="row justify-content-center mb-4 mt-5">
         {products.map((product) => (
           <div className="card m-3" style={{ width: "18rem" }} key={product.MaSanPham}>
-            <img src={product.HinhAnh} className="card-img-top" alt={product.TenHoa} />
+            <img src={`http://localhost:8080/${product.HinhAnh}`}  className="card-img-top" alt={product.TenHoa} />
             <div className="card-body">
               <h5 className="card-title">Name: {product.TenHoa}</h5>
               <h5 className="card-title">Price: {product.GiaBan}₫</h5>

@@ -199,7 +199,7 @@ const Product = () => {
                 <td>{item.MaLoaiHoa}</td>
                 <td>{item.GiaBan}₫</td>
                 <td>{item.MoTa}</td>
-                <td><img src={`/uploads/${item.HinhAnh}`} alt={item.TenHoa} style={{ width: '50px', height: '50px' }} /></td>
+                <td><img src={`http://localhost:8080/${item.HinhAnh}`} alt={item.TenHoa} style={{ width: '50px', height: '50px' }} /></td>
                 <td>{item.NgayThem}</td>
                 <td>
                   <button className="btn btn-warning me-2" data-bs-toggle="modal" data-bs-target="#productModal" onClick={() => { setAction('edit'); setNewProduct(item); setImagePreview(`/${item.HinhAnh}`); setSelectedFile(null); }}>Sửa</button>

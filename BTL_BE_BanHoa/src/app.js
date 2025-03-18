@@ -12,12 +12,18 @@ import chitietdonhangRoutes  from '../routes/chitietdonhang.routes.js';
 import khuyenmaiRoutes  from '../routes/khuyenmai.routes.js';
 import nhaccungcapRoutes  from '../routes/nhacungcap.routes.js';
 import authRoutes from '../routes/auth.routes.js';
+import path from 'path';
 const app = express();
 
 
 // Middleware để parse JSON
 app.use(express.json());
 app.use(cors());
+
+// Khai báo thư mục tĩnh cho uploads
+const __dirname = path.resolve();
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 
 // imprort vào
 app.use("/api/khachhang", khachhangRoutes);

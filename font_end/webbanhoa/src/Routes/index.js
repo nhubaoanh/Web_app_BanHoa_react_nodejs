@@ -7,6 +7,8 @@ import Register from "../Pages/Register";
 import Paypay from "../Pages/Paypay";
 import Product from "../Pages/Manage/Product";
 import LayoutAdmin from "../components/LayoutAdmin";
+import Custom from "../Pages/Manage/Custom";
+import Nhacc from "../Pages/Manage/Nhacc";
 
 
 export const routes = [
@@ -44,6 +46,13 @@ export const routes = [
       {
         path: "product",
         element: <Product />
+      },{
+        path : "custom",
+        element : <Custom/>
+      },
+      {
+        path : "nhacc",
+        element : <Nhacc/>
       }
     ],
   },

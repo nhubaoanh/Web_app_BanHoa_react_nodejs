@@ -18,15 +18,15 @@ const Admin = () => {
                 <i className="fas fa-chart-area fa-fw me-3" />
                 <span>Website traffic</span>
               </Link>
-              <Link to="#" className="list-group-item list-group-item-action py-2 ripple">
+              <Link to="/admin/product" className="list-group-item list-group-item-action py-2 ripple">
                 <i className="fas fa-lock fa-fw me-3" />
-                <span>Password</span>
+                <span>Product</span>
               </Link>
               <Link to="#" className="list-group-item list-group-item-action py-2 ripple">
                 <i className="fas fa-chart-line fa-fw me-3" />
                 <span>Analytics</span>
               </Link>
-              <Link to="/admin/product" className="list-group-item list-group-item-action py-2 ripple">
+              <Link to="#" className="list-group-item list-group-item-action py-2 ripple">
                 <i className="fas fa-chart-pie fa-fw me-3" />
                 <span>SEO</span>
               </Link>
@@ -46,9 +46,13 @@ const Admin = () => {
                 <i className="fas fa-calendar fa-fw me-3" />
                 <span>Calendar</span>
               </Link>
-              <Link to="#" className="list-group-item list-group-item-action py-2 ripple">
+              <Link to="/admin/custom" className="list-group-item list-group-item-action py-2 ripple">
                 <i className="fas fa-users fa-fw me-3" />
-                <span>Users</span>
+                <span>Custom</span>
+              </Link>
+              <Link to="/admin/nhacc" className="list-group-item list-group-item-action py-2 ripple">
+                <i className="fas fa-users fa-fw me-3" />
+                <span>Nhà cung cấp</span>
               </Link>
               <Link to="#" className="list-group-item list-group-item-action py-2 ripple">
                 <i className="fas fa-money-bill fa-fw me-3" />

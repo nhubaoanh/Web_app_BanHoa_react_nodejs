@@ -11,7 +11,7 @@ import khuyenmaiRoutes  from '../routes/khuyenmai.routes.js';
 import chitietdonhangRoutes  from '../routes/chitietdonhang.routes.js';
 import khuyenmaiRoutes  from '../routes/khuyenmai.routes.js';
 import nhaccungcapRoutes  from '../routes/nhacungcap.routes.js';
-
+import authRoutes from '../routes/auth.routes.js';
 const app = express();
 
 
@@ -30,6 +30,7 @@ app.use("/api/nhanvien", nhanviennhapRoutes);
 app.use("/api/khuyenmai", khuyenmaiRoutes);
 app.use("/api/chitietdonhang", chitietdonhangRoutes);
 app.use("/api/nhacungcap", nhaccungcapRoutes);
+app.use("/api/auth", authRoutes);
 app.listen(8080, () => {
     console.log("Server đang chạy tại http://localhost:8080");
   });

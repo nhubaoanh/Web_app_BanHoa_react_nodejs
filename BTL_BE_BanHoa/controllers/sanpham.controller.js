@@ -1,5 +1,5 @@
 import sanpham from "../models/sanpham.model";
-
+import path from 'path';
 const sanphamController = {
   getAll: (req, res) => {
     sanpham.getAll((result) => res.send(result));
@@ -12,6 +12,9 @@ const sanphamController = {
 
   insert: (req, res) => {
     const data = req.body;
+    if (req.file) {
+      data.HinhAnh = path.join('uploads', req.file.filename); // Lưu đường dẫn ảnh
+    }
     console.log("Data received for insert:", data); // Thêm log để kiểm tra dữ liệu
     sanpham.insert(data, (result) => res.send(result));
   },
@@ -19,6 +22,9 @@ const sanphamController = {
   update: (req, res) => {
     const data = req.body;
     const id = req.params.id;
+    if (req.file) {
+      data.HinhAnh = path.join('uploads', req.file.filename); // Lưu đường dẫn ảnh
+    }
     sanpham.update(data, id, (result) => res.send(result));
   },
 

@@ -1,9 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import api from '../../../services/api';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min';
 
 const Product = () => {
   const [items, setItems] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [newProduct, setNewProduct] = useState({
+    MaSanPham: '',
+    TenHoa: '',
+    MaLoaiHoa: '',
+    GiaBan: '',
+    MoTa: '',
+    HinhAnh: '',
+    NgayThem: ''
+  });
+  const [action, setAction] = useState('add'); // Quản lý trạng thái hành động (add, edit, delete)
+  const [imagePreview, setImagePreview] = useState(null); // State để lưu trữ URL của ảnh đã chọn
+  const [selectedFile, setSelectedFile] = useState(null); // State để lưu trữ tệp ảnh đã chọn
 
   // Gọi API để lấy danh sách sản phẩm
   useEffect(() => {
@@ -18,22 +32,134 @@ const Product = () => {
   }, []);
 
   const filteredItems = items.filter(item =>
-    item.TenHoa.toLowerCase().includes(searchTerm.toLowerCase())
+    item.TenHoa && item.TenHoa.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleAdd = () => {
-    // Logic for adding a new product
-    console.log("Add new product");
+    const formData = new FormData();
+    Object.keys(newProduct).forEach(key => {
+      formData.append(key, newProduct[key]);
+    });
+    if (selectedFile) {
+      formData.append('HinhAnh', selectedFile);
+    }
+
+    // Gửi thông tin sản phẩm mới đến backend
+    api
+      .post("/api/sanpham", formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+      .then((response) => {
+        setItems([...items, response.data]); // Cập nhật danh sách sản phẩm
+        setNewProduct({
+          MaSanPham: '',
+          TenHoa: '',
+          MaLoaiHoa: '',
+          GiaBan: '',
+          MoTa: '',
+          HinhAnh: '',
+          NgayThem: ''
+        }); // Reset form
+        setImagePreview(null); // Reset ảnh đã chọn
+        setSelectedFile(null); // Reset tệp ảnh đã chọn
+        console.log("Thêm sản phẩm thành công:", response.data);
+      })
+      .catch((error) => {
+        console.log("Lỗi khi thêm sản phẩm:", error);
+      });
   };
 
-  const handleEdit = (index) => {
-    // Logic for editing a product
-    console.log("Edit product at index:", index);
+  const handleEdit = () => {
+    const formData = new FormData();
+    Object.keys(newProduct).forEach(key => {
+      formData.append(key, newProduct[key]);
+    });
+    if (selectedFile) {
+      formData.append('HinhAnh', selectedFile);
+    }
+
+    // Gửi thông tin sản phẩm mới đến backend
+    api
+      .put(`/api/sanpham/${newProduct.MaSanPham}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+      .then((response) => {
+        const updatedItems = items.map(item =>
+          item.MaSanPham === newProduct.MaSanPham ? response.data : item
+        );
+        setItems(updatedItems); // Cập nhật danh sách sản phẩm
+        setNewProduct({
+          MaSanPham: '',
+          TenHoa: '',
+          MaLoaiHoa: '',
+          GiaBan: '',
+          MoTa: '',
+          HinhAnh: '',
+          NgayThem: ''
+        }); // Reset form
+        setImagePreview(null); // Reset ảnh đã chọn
+        setSelectedFile(null); // Reset tệp ảnh đã chọn
+        console.log("Sửa sản phẩm thành công:", response.data);
+      })
+      .catch((error) => {
+        console.log("Lỗi khi sửa sản phẩm:", error);
+      });
   };
 
-  const handleDelete = (index) => {
-    // Logic for deleting a product
-    console.log("Delete product at index:", index);
+  const handleDelete = () => {
+    // Gửi yêu cầu xóa sản phẩm đến backend
+    api
+      .delete(`/api/sanpham/${newProduct.MaSanPham}`)
+      .then((response) => {
+        const updatedItems = items.filter(item => item.MaSanPham !== newProduct.MaSanPham);
+        setItems(updatedItems); // Cập nhật danh sách sản phẩm
+        setNewProduct({
+          MaSanPham: '',
+          TenHoa: '',
+          MaLoaiHoa: '',
+          GiaBan: '',
+          MoTa: '',
+          HinhAnh: '',
+          NgayThem: ''
+        }); // Reset form
+        setImagePreview(null); // Reset ảnh đã chọn
+        setSelectedFile(null); // Reset tệp ảnh đã chọn
+        console.log("Xóa sản phẩm thành công:", response.data);
+      })
+      .catch((error) => {
+        console.log("Lỗi khi xóa sản phẩm:", error);
+      });
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setNewProduct({ ...newProduct, [name]: value });
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSubmit = () => {
+    if (action === 'add') {
+      handleAdd();
+    } else if (action === 'edit') {
+      handleEdit();
+    } else if (action === 'delete') {
+      handleDelete();
+    }
   };
 
   return (
@@ -51,7 +177,7 @@ const Product = () => {
             Search
           </label>
         </div>
-        <button className="btn btn-primary mb-3" onClick={handleAdd}>Thêm sản phẩm</button>
+        <button className="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#productModal" onClick={() => { setAction('add'); setNewProduct({ MaSanPham: '', TenHoa: '', MaLoaiHoa: '', GiaBan: '', MoTa: '', HinhAnh: '', NgayThem: '' }); setImagePreview(null); setSelectedFile(null); }}>Thêm sản phẩm</button>
         <table className="table">
           <thead>
             <tr>
@@ -73,16 +199,77 @@ const Product = () => {
                 <td>{item.MaLoaiHoa}</td>
                 <td>{item.GiaBan}₫</td>
                 <td>{item.MoTa}</td>
-                <td>{item.HinhAnh}</td>
+                <td><img src={`/uploads/${item.HinhAnh}`} alt={item.TenHoa} style={{ width: '50px', height: '50px' }} /></td>
                 <td>{item.NgayThem}</td>
                 <td>
-                  <button className="btn btn-warning me-2" onClick={() => handleEdit(index)}>Sửa</button>
-                  <button className="btn btn-danger" onClick={() => handleDelete(index)}>Xóa</button>
+                  <button className="btn btn-warning me-2" data-bs-toggle="modal" data-bs-target="#productModal" onClick={() => { setAction('edit'); setNewProduct(item); setImagePreview(`/${item.HinhAnh}`); setSelectedFile(null); }}>Sửa</button>
+                  <button className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#productModal" onClick={() => { setAction('delete'); setNewProduct(item); setImagePreview(null); setSelectedFile(null); }}>Xóa</button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
+      </div>
+
+      {/* Modal for adding, editing, and deleting product */}
+      <div className="modal fade" id="productModal" tabIndex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title" id="productModalLabel">
+                {action === 'add' && 'Thêm sản phẩm mới'}
+                {action === 'edit' && 'Sửa sản phẩm'}
+                {action === 'delete' && 'Xóa sản phẩm'}
+              </h5>
+              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div className="modal-body">
+              <form>
+                <div className="mb-3">
+                  <label htmlFor="MaSanPham" className="form-label">Mã Sản Phẩm</label>
+                  <input type="text" className="form-control" id="MaSanPham" name="MaSanPham" value={newProduct.MaSanPham} onChange={handleChange} disabled={action !== 'add'} />
+                </div>
+                {action !== 'delete' && (
+                  <>
+                    <div className="mb-3">
+                      <label htmlFor="TenHoa" className="form-label">Tên Hoa</label>
+                      <input type="text" className="form-control" id="TenHoa" name="TenHoa" value={newProduct.TenHoa} onChange={handleChange} />
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="MaLoaiHoa" className="form-label">Mã Loại Hoa</label>
+                      <input type="text" className="form-control" id="MaLoaiHoa" name="MaLoaiHoa" value={newProduct.MaLoaiHoa} onChange={handleChange} />
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="GiaBan" className="form-label">Giá Bán</label>
+                      <input type="text" className="form-control" id="GiaBan" name="GiaBan" value={newProduct.GiaBan} onChange={handleChange} />
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="MoTa" className="form-label">Mô Tả</label>
+                      <input type="text" className="form-control" id="MoTa" name="MoTa" value={newProduct.MoTa} onChange={handleChange} />
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="HinhAnh" className="form-label">Hình Ảnh</label>
+                      <input type="file" className="form-control" id="HinhAnh" name="HinhAnh" onChange={handleImageChange} />
+                      {imagePreview && <img src={imagePreview} alt="Preview" style={{ width: '100px', height: '100px', marginTop: '10px' }} />}
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="NgayThem" className="form-label">Ngày Thêm</label>
+                      <input type="date" className="form-control" id="NgayThem" name="NgayThem" value={newProduct.NgayThem} onChange={handleChange} />
+                    </div>
+                  </>
+                )}
+              </form>
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+              <button type="button" className="btn btn-primary" onClick={handleSubmit} data-bs-dismiss="modal">
+                {action === 'add' && 'Thêm sản phẩm'}
+                {action === 'edit' && 'Sửa sản phẩm'}
+                {action === 'delete' && 'Xóa sản phẩm'}
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

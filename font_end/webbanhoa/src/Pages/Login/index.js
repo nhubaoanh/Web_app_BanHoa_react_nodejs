@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -7,10 +7,12 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
+
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://localhost:8080/api/auth/login', { userName, password });
+      const response = await axios.post("http://localhost:8080/api/admin/login", { userName, password });
       const { token } = response.data;
+      console.log(response.data);
       localStorage.setItem('token', token);
       console.log('jwt token:', token);
       alert('Login successful');

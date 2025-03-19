@@ -1,4 +1,3 @@
-// filepath: d:\Programming_Center\Programming_congngheWeb\ThWeb\BTL_WEB_BAOANH\Web_app_ban_hoa_kiwi\font_end\webbanhoa\src\Layout\Headers\index.js
 import { Link } from 'react-router-dom';
 import React, { useEffect, useState } from "react";
 import api from "../../services/api";
@@ -11,7 +10,7 @@ const Header = () => {
   // Gọi API khi component được render lần đầu
   useEffect(() => {
     api
-      .get("/api/loaihoa") // Gọi API lấy danh sách sản phẩm
+      .get("/api/loaihoa") // Gọi API lấy danh sách loại hoa
       .then((response) => {
         setMenus(response.data); // Lưu dữ liệu vào state
       })
@@ -29,28 +28,46 @@ const Header = () => {
   }, []);
 
   return (
-    <>
-      <nav className="navbar navbar-expand-lg navbar-light bg-light">
-        <div className="container-fluid">
-          <Link className="navbar-brand" to="/">
-            Shop
-          </Link>
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNav"
-            aria-controls="navbarNav"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon" />
-          </button>
-
-          <div className="collapse navbar-collapse container" id="navbarNav">
-            <div className='col-md-3'>
-              <ul className="navbar-nav mb-2 mb-lg-0">
-                {/* Danh mục sản phẩm */}
+    <div>
+      <header key="1">
+        <nav
+          className="navbar navbar-expand-lg navbar-dark d-none d-lg-block"
+          style={{
+            zIndex: "2000",
+          }}
+        >
+          <div className="container-fluid">
+            <Link className="navbar-brand nav-link" to="/">
+              <strong>kiwi</strong>
+            </Link>
+            <button
+              aria-controls="navbarExample01"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+              className="navbar-toggler"
+              data-bs-toggle="collapse"
+              data-bs-target="#navbarExample01"
+              type="button"
+            >
+              <i className="fas fa-bars" />
+            </button>
+            <div className="collapse navbar-collapse" id="navbarExample01">
+              <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                <li className="nav-item active">
+                  <Link className="nav-link" to="#intro">
+                    Home
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/learn-bootstrap">
+                    Learn Bootstrap 5
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/download-mdb">
+                    Download MDB UI KIT
+                  </Link>
+                </li>
                 <li className="nav-item dropdown">
                   <Link
                     className="nav-link dropdown-toggle"
@@ -62,181 +79,120 @@ const Header = () => {
                   >
                     Danh Mục
                   </Link>
-                  <ul className="dropdown-menu" aria-labelledby="productDropdown">
-                    {
-                      menus.map((menu) => (
-                        <li key={menu.TenLoaiHoa}><Link className="dropdown-item" to="/hoa-tiec-cuoi">{menu.TenLoaiHoa}</Link></li>
-                      ))
-                    }
+                  <ul className="dropdown-menu"  aria-labelledby="productDropdown">
+                    {menus.map((menu) => (
+                      <li key={menu.TenLoaiHoa}>
+                        <Link className="dropdown-item" to={`/hoa-tiec-cuoi/${menu.TenLoaiHoa}`}>
+                          {menu.TenLoaiHoa}
+                        </Link>
+                      </li>
+                    ))}
                   </ul>
                 </li>
               </ul>
+              <ul className="navbar-nav list-inline">
+                <li className="">
+                  <Link className="nav-link" to="/youtube">
+                    <i className="fab fa-youtube" />
+                  </Link>
+                </li>
+                <li className="">
+                  <Link className="nav-link" to="/facebook">
+                    <i className="fab fa-facebook-f" />
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/twitter">
+                    <i className="fab fa-twitter" />
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/github">
+                    <i className="fab fa-github" />
+                  </Link>
+                </li>
+              </ul>
             </div>
-            {/* Tìm kiếm */}
-            <form className="d-flex me-3 w-50">
-              <input
-                className="form-control me-2"
-                type="search"
-                placeholder="Tìm kiếm"
-                aria-label="Search"
-              />
-              <button className="btn btn-outline-success" type="submit">
-                <i className="fa-solid fa-magnifying-glass"></i>
-              </button>
-            </form>
-            {/* Tài khoản */}
-            <ul className="navbar-nav">
-              {/* Thông báo */}
-              <li className="col-md-3 nav-item">
-                <Link className="nav-link" to="/thong-bao">
-                  <i className="fa-solid fa-bell"></i>
-                </Link>
-              </li>
-              {/* Giỏ hàng */}
-              <li className="col-md-3 nav-item">
-                <Link className="nav-link" to="cart">
-                  <i className="fa-solid fa-cart-shopping"></i>
-                </Link>
-              </li>
-              <li className="col-md-4 nav-item dropdown">
-                <Link
-                  className="nav-link dropdown-toggle"
-                  to="#"
-                  id="accountDropdown"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  <i className="fa-solid fa-circle-user"></i>
-                </Link>
-                <ul className="dropdown-menu" aria-labelledby="accountDropdown">
-                  <li><Link className="dropdown-item" to="/Login">Đăng nhập</Link></li>
-                  <li><Link className="dropdown-item" to="/Register">Đăng ký</Link></li>
-                </ul>
-              </li>
-              <li className="nav-item align-items-center d-flex col-md-2">
-                <i className="fas fa-sun" />
-                {/* Default switch */}
-                <div className="ms-2 form-check form-switch">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    role="switch"
-                    id="themingSwitcher"
-                  />
-                </div>
-                <i className="fas fa-moon" />
-              </li>
-            </ul>
           </div>
-        </div>
-      </nav>
-
-      <>
-        {/* Carousel wrapper */}
+        </nav>
         <div
-          id="carouselBasicExample"
-          data-mdb-carousel-init=""
-          className="carousel slide carousel-fade"
-          data-mdb-ride="carousel"
+          className="carousel slide carousel-fade shadow-2-strong"
+          data-bs-ride="carousel"
+          id="introCarousel"
         >
-          {/* Indicators */}
           <div className="carousel-indicators">
             <button
-              type="button"
-              data-mdb-button-init=""
-              data-mdb-target="#carouselBasicExample"
-              data-mdb-slide-to={0}
-              className={currentSlide === 0 ? "active" : ""}
-              aria-current="true"
-              aria-label="Slide 1"
+              className="active"
+              data-bs-slide-to="0"
+              data-bs-target="#introCarousel"
             />
-            <button
-              type="button"
-              data-mdb-button-init=""
-              data-mdb-target="#carouselBasicExample"
-              data-mdb-slide-to={1}
-              className={currentSlide === 1 ? "active" : ""}
-              aria-label="Slide 2"
-            />
-            <button
-              type="button"
-              data-mdb-button-init=""
-              data-mdb-target="#carouselBasicExample"
-              data-mdb-slide-to={2}
-              className={currentSlide === 2 ? "active" : ""}
-              aria-label="Slide 3"
-            />
+            <button data-bs-slide-to="1" data-bs-target="#introCarousel" />
+            <button data-bs-slide-to="2" data-bs-target="#introCarousel" />
           </div>
-          {/* Inner */}
           <div className="carousel-inner">
-            {/* Single item */}
-            <div className={`carousel-item ${currentSlide === 0 ? "active" : ""}`}>
-              <img
-                src="https://mdbcdn.b-cdn.net/img/Photos/Slides/img%20(15).webp"
-                className="d-block w-100"
-                alt="Sunset Over the City"
-              />
-              <div className="carousel-caption d-none d-md-block">
-                <h5>First slide label</h5>
-                <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+            <div className="carousel-item active">
+              <div
+                className="mask"
+                style={{
+                  backgroundColor: "rgba(0, 0, 0, 0.6)",
+                }}
+              >
               </div>
             </div>
-            {/* Single item */}
-            <div className={`carousel-item ${currentSlide === 1 ? "active" : ""}`}>
-              <img
-                src="https://mdbcdn.b-cdn.net/img/Photos/Slides/img%20(22).webp"
-                className="d-block w-100"
-                alt="Canyon at Nigh"
-              />
-              <div className="carousel-caption d-none d-md-block">
-                <h5>Second slide label</h5>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            <div className="carousel-item">
+              <div
+                className="mask"
+                style={{
+                  backgroundColor: "rgba(0, 0, 0, 0.3)",
+                }}
+              >
+                <div className="d-flex justify-content-center align-items-center h-100">
+                  <div className="text-white text-center">
+                    <h2>You can place here any content</h2>
+                  </div>
+                </div>
               </div>
             </div>
-            {/* Single item */}
-            <div className={`carousel-item ${currentSlide === 2 ? "active" : ""}`}>
-              <img
-                src="https://mdbcdn.b-cdn.net/img/Photos/Slides/img%20(23).webp"
-                className="d-block w-100"
-                alt="Cliff Above a Stormy Sea"
-              />
-              <div className="carousel-caption d-none d-md-block">
-                <h5>Third slide label</h5>
-                <p>
-                  Praesent commodo cursus magna, vel scelerisque nisl consectetur.
-                </p>
+            <div className="carousel-item ">
+              <div
+                className="mask"
+                style={{
+                  background:
+                    "linear-gradient(45deg, rgba(29, 236, 197, 0.7), rgba(91, 14, 214, 0.7) 100%)",
+                }}
+              >
+                <div className="d-flex justify-content-center align-items-center h-100">
+                  <div className="text-white text-center">
+                    <h2>And cover it with any mask</h2>
+                    <Link className="btn btn-outline-light btn-lg m-2" to="/learn-masks">
+                      Learn about masks
+                    </Link>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-          {/* Inner */}
-          {/* Controls */}
-          <button
-            data-mdb-button-init=""
+          <a
             className="carousel-control-prev"
-            type="button"
-            data-mdb-target="#carouselBasicExample"
-            data-mdb-slide="prev"
-            onClick={() => setCurrentSlide((prevSlide) => (prevSlide - 1 + 3) % 3)}
+            data-bs-slide="prev"
+            href="#introCarousel"
+            role="button"
           >
-            <span className="carousel-control-prev-icon" aria-hidden="true" />
-            <span className="visually-hidden">Previous</span>
-          </button>
-          <button
-            data-mdb-button-init=""
+            <span aria-hidden="true" className="carousel-control-prev-icon" />
+            <span className="sr-only">Previous</span>
+          </a>
+          <a
             className="carousel-control-next"
-            type="button"
-            data-mdb-target="#carouselBasicExample"
-            data-mdb-slide="next"
-            onClick={() => setCurrentSlide((prevSlide) => (prevSlide + 1) % 3)}
+            data-bs-slide="next"
+            href="#introCarousel"
+            role="button"
           >
-            <span className="carousel-control-next-icon" aria-hidden="true" />
-            <span className="visually-hidden">Next</span>
-          </button>
+            <span aria-hidden="true" className="carousel-control-next-icon" />
+            <span className="sr-only">Next</span>
+          </a>
         </div>
-        {/* Carousel wrapper */}
-      </>
-    </>
+      </header>
+    </div>
   );
 };
 

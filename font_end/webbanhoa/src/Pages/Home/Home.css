@@ -4,3 +4,32 @@
   height: auto;
   /* Add any other properties you need */
 }
+/* Hiệu ứng zoom khi di chuột vào ảnh */
+.bg-image {
+  overflow: hidden;
+  position: relative;
+}
+
+.bg-image img {
+  transition: transform 0.5s ease;
+}
+
+.bg-image:hover img {
+  transform: scale(1.1);
+}
+
+/* Hiệu ứng ripple khi di chuột vào ảnh */
+.bg-image .ripple {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.3);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.bg-image:hover .ripple {
+  opacity: 1;
+}

@@ -7,5 +7,6 @@ router.get('/:id', adminController.getById);
 router.post('/', adminController.insert);
 router.put('/:id', adminController.update);
 router.delete('/:id', adminController.delete);
+router.post('/login', adminController.login);
 
 export default router;

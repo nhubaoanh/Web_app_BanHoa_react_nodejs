@@ -48,4 +48,12 @@ admin.delete = (id, callback) => {
   });
 };
 
+admin.findByCredentials = (userName, password, callback) => {
+  const sqlString = "SELECT * FROM admin WHERE TenDangNhap = ? AND MatKhau = ?";
+  db.query(sqlString, [userName, password], (err, result) => {
+    if (err) return callback(err);
+    callback(null, result);
+  });
+};
+
 export default admin;

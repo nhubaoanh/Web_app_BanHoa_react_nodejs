@@ -1,9 +1,44 @@
-.carousel {
-    max-width: 1250px; /* Điều chỉnh kích thước tối đa của slider */
-    margin: auto; /* Căn giữa slider */
+/* Carousel styling */
+#introCarousel,
+.carousel-inner,
+.carousel-item,
+.carousel-item.active {
+  height: 100vh;
+}
+
+.carousel-item:nth-child(1) {
+  background-image: url('https://mdbootstrap.com/img/Photos/Others/images/76.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+}
+
+.carousel-item:nth-child(2) {
+  background-image: url('https://mdbootstrap.com/img/Photos/Others/images/77.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+}
+
+.carousel-item:nth-child(3) {
+  background-image: url('https://mdbootstrap.com/img/Photos/Others/images/78.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+}
+
+/* Height for devices larger than 576px */
+@media (min-width: 992px) {
+  #introCarousel {
+    margin-top: -58.59px;
   }
-  
-  .carousel-inner > img {
-    height: 300px; /* Điều chỉnh chiều cao của ảnh */
-    object-fit: cover; /* Đảm bảo ảnh không bị méo */
-  }
+}
+
+.navbar .nav-link {
+  color: #fff !important;
+}
+.nav-item.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+

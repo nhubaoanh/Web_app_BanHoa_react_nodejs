@@ -1,8 +1,21 @@
 import React from 'react';
 import "../Admin/admin.css";
-import { Link } from "react-router-dom";
+import { Link , useNavigate} from "react-router-dom";
+import api from '../../services/api';
 
 const Admin = () => {
+    const navigate = useNavigate();
+  // Hàm xử lý đăng xuất
+  const handleLogout = async () => {
+    try {
+      await api.post("/api/admin/logout"); // Gọi API đăng xuất
+      localStorage.removeItem("token"); // Xóa token khỏi localStorage
+      navigate("/login"); // Chuyển hướng đến trang đăng nhập
+    } catch (error) {
+      console.error("Lỗi khi đăng xuất:", error);
+    }
+  };
+
   return (
     <div className="">
       <header>
@@ -33,18 +46,6 @@ const Admin = () => {
               <Link to="#" className="list-group-item list-group-item-action py-2 ripple">
                 <i className="fas fa-chart-bar fa-fw me-3" />
                 <span>Orders</span>
-              </Link>
-              <Link to="#" className="list-group-item list-group-item-action py-2 ripple">
-                <i className="fas fa-globe fa-fw me-3" />
-                <span>International</span>
-              </Link>
-              <Link to="#" className="list-group-item list-group-item-action py-2 ripple">
-                <i className="fas fa-building fa-fw me-3" />
-                <span>Partners</span>
-              </Link>
-              <Link to="#" className="list-group-item list-group-item-action py-2 ripple">
-                <i className="fas fa-calendar fa-fw me-3" />
-                <span>Calendar</span>
               </Link>
               <Link to="/admin/custom" className="list-group-item list-group-item-action py-2 ripple">
                 <i className="fas fa-users fa-fw me-3" />
@@ -80,14 +81,9 @@ const Admin = () => {
             <ul className="navbar-nav ms-auto d-flex flex-row">
               <li className="nav-item dropdown">
                 <Link className="nav-link me-3 me-lg-0 dropdown-toggle hidden-arrow" to="#" id="navbarDropdownMenuLink" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
-                  <i className="fas fa-bell" />
+                  <i className="fa-solid fa-bell"></i>
                   <span className="badge rounded-pill badge-notification bg-danger">1</span>
                 </Link>
-                <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
-                  <li><Link className="dropdown-item" to="#">Some news</Link></li>
-                  <li><Link className="dropdown-item" to="#">Another news</Link></li>
-                  <li><Link className="dropdown-item" to="#">Something else here</Link></li>
-                </ul>
               </li>
               <li className="nav-item">
                 <Link className="nav-link me-3 me-lg-0" to="#"><i className="fas fa-fill-drip" /></Link>
@@ -96,28 +92,13 @@ const Admin = () => {
                 <Link className="nav-link" to="#"><i className="fab fa-github" /></Link>
               </li>
               <li className="nav-item dropdown">
-                <Link className="nav-link me-3 me-lg-0 dropdown-toggle hidden-arrow" to="#" id="navbarDropdown" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
-                  <i className="united kingdom flag m-0" />
-                </Link>
-                <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                  <li><Link className="dropdown-item" to="#"><i className="united kingdom flag" /> English <i className="fa fa-check text-success ms-2" /></Link></li>
-                  <li><hr className="dropdown-divider" /></li>
-                  <li><Link className="dropdown-item" to="#"><i className="flag-poland flag" /> Polski</Link></li>
-                  <li><Link className="dropdown-item" to="#"><i className="flag-china flag" /> 中文</Link></li>
-                  <li><Link className="dropdown-item" to="#"><i className="flag-japan flag" /> 日本語</Link></li>
-                  <li><Link className="dropdown-item" to="#"><i className="flag-germany flag" /> Deutsch</Link></li>
-                  <li><Link className="dropdown-item" to="#"><i className="flag-france flag" /> Français</Link></li>
-                  <li><Link className="dropdown-item" to="#"><i className="flag-spain flag" /> Español</Link></li>
-                  <li><Link className="dropdown-item" to="#"><i className="flag-russia flag" /> Русский</Link></li>
-                  <li><Link className="dropdown-item" to="#"><i className="flag-portugal flag" /> Português</Link></li>
-                </ul>
-              </li>
-              <li className="nav-item dropdown">
                 <Link className="nav-link dropdown-toggle hidden-arrow d-flex align-items-center" to="#" id="navbarDropdownMenuLink" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
                   <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img (31).webp" className="rounded-circle" height={22} alt="Avatar" loading="lazy" />
                 </Link>
                 <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
-                  <li><Link className="dropdown-item" to="#">My profile</Link></li>
+                  <li><button className="dropdown-item" to="#" onClick={() => handleLogout()}>
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    </button></li>
                   <li><Link className="dropdown-item" to="#">Settings</Link></li>
                   <li><Link className="dropdown-item" to="#">Logout</Link></li>
                 </ul>

@@ -2,8 +2,22 @@ import React, { useEffect, useState } from 'react';
 import api from '../../../services/api';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
-
+import { useNavigate } from "react-router-dom";
 const Product = () => {
+  const navigate = useNavigate();
+
+  // Hàm kiểm tra đăng nhập
+  const checkLogin = () => {
+    if (!localStorage.getItem("token")) {
+      navigate("/login");
+    }
+  };
+
+  // Kiểm tra đăng nhập khi component được render lần đầu
+  useEffect(() => {
+    checkLogin();
+  }, []);
+
   const [items, setItems] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [newProduct, setNewProduct] = useState({

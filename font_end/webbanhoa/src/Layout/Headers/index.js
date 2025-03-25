@@ -1,11 +1,13 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from "react";
 import api from "../../services/api";
 import "./Header.css";
+import { Button } from 'bootstrap/dist/js/bootstrap.bundle.min';
 
 const Header = () => {
   const [menus, setMenus] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const navigate = useNavigate();
 
   // Gọi API khi component được render lần đầu
   useEffect(() => {
@@ -26,6 +28,17 @@ const Header = () => {
 
     return () => clearInterval(interval); // Dọn dẹp interval khi component unmount
   }, []);
+
+  // Hàm xử lý đăng xuất
+  const handleLogout = async () => {
+    try {
+      await api.post("/api/admin/logout"); // Gọi API đăng xuất
+      localStorage.removeItem("token"); // Xóa token khỏi localStorage
+      navigate("/login"); // Chuyển hướng đến trang đăng nhập
+    } catch (error) {
+      console.error("Lỗi khi đăng xuất:", error);
+    }
+  };
 
   return (
     <div>
@@ -113,6 +126,10 @@ const Header = () => {
                       <Link className="dropdown-item" to="/register">
                         Register
                       </Link>
+                      <button className="dropdown-item" onClick={() => handleLogout()}>
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        Logout
+                      </button>
                     </li>
                   </ul>
                 </li>

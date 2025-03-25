@@ -61,6 +61,14 @@ const adminController = {
         res.status(401).send('Invalid username or password');
       }
     });
+  },
+  logout: (req, res) => {
+    // Cập nhật trạng thái của tất cả người dùng thành 0
+    admin.resetStatus((err) => {
+      if (err) return res.status(500).send('Internal server error');
+      res.send('Logout successful');
+    });
   }
+  
 };
 export default adminController

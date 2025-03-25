@@ -43,7 +43,7 @@ const Admin = () => {
                 <i className="fas fa-chart-pie fa-fw me-3" />
                 <span>SEO</span>
               </Link>
-              <Link to="#" className="list-group-item list-group-item-action py-2 ripple">
+              <Link to="/admin/order" className="list-group-item list-group-item-action py-2 ripple">
                 <i className="fas fa-chart-bar fa-fw me-3" />
                 <span>Orders</span>
               </Link>

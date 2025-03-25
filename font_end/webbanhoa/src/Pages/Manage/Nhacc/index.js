@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import api from '../../../services/api';
+// thêm thư viện này vào để chuyển trang
+import ReactPaginate from 'react-paginate';
+import './Nhacc.css'; // Thêm CSS cho phân trang
 
 const Nhacc = () => {
   // tạo trạng thái
@@ -7,6 +10,13 @@ const Nhacc = () => {
   const [newNhacc, setNewNhacc] = useState({});
   const [action, setAction] = useState('add');
   const [searchTerm, setSearchTerm] = useState('');
+
+  const [currentPage, setCurrentPage] = useState(0);
+  const itemsPerPage = 10;
+
+  const offset = currentPage * itemsPerPage;
+  const currentItems = item.slice(offset, offset + itemsPerPage);
+  const pageCount = Math.ceil(item.length / itemsPerPage);
 
   // Gọi API để lấy danh sách nhà cung cấp
   useEffect(() => {
@@ -90,6 +100,10 @@ const Nhacc = () => {
     setNewNhacc({ ...newNhacc, [name]: value });
   };
 
+  const handlePageClick = (event) => {
+    setCurrentPage(event.selected);
+  };
+
   return (
     <div>
       <div className='container'>
@@ -119,7 +133,7 @@ const Nhacc = () => {
           </thead>
           <tbody>
             {
-              filteredItem.map((item) => (
+              filteredItem.slice(offset, offset + itemsPerPage).map((item) => (
                 <tr key={item.MaNhaCungCap}>
                   <td>{item.MaNhaCungCap}</td>
                   <td>{item.TenNhaCungCap}</td>
@@ -136,6 +150,19 @@ const Nhacc = () => {
             }
           </tbody>
         </table>
+        <ReactPaginate
+          previousLabel={'Previous'}
+          nextLabel={'Next'}
+          breakLabel={'...'}
+          breakClassName={'break-me'}
+          pageCount={pageCount}
+          marginPagesDisplayed={2}
+          pageRangeDisplayed={5}
+          onPageChange={handlePageClick}
+          containerClassName={'pagination'}
+          subContainerClassName={'pages pagination'}
+          activeClassName={'active'}
+        />
       </div>
       <div className="modal fade" id="productModal" tabIndex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
         <div className="modal-dialog">

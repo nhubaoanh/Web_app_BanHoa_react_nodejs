@@ -10,6 +10,7 @@ import LayoutAdmin from "../components/LayoutAdmin";
 import Custom from "../Pages/Manage/Custom";
 import Nhacc from "../Pages/Manage/Nhacc";
 import Dashboard from "../Pages/Manage/Dashboard";
+import Orders from "../Pages/Manage/Order";
 
 
 export const routes = [
@@ -58,6 +59,10 @@ export const routes = [
       {
         path : "dashboard",
         element : <Dashboard/>
+      },
+      {
+        path : "order",
+        element : <Orders/>
       }
     ],
   },

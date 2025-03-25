@@ -1,0 +1,23 @@
+.pagination {
+    display: flex;
+    justify-content: center;
+    padding: 1rem;
+  }
+  
+  .pagination li {
+    display: inline;
+    padding: 0.5rem;
+  }
+  
+  .pagination li a {
+    text-decoration: none;
+    color: #007bff;
+  }
+  
+  .pagination li.active a {
+    font-weight: bold;
+    color: #fff;
+    background-color: #007bff;
+    border-radius: 0.25rem;
+    padding: 0.5rem;
+  }

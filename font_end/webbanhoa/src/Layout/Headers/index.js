@@ -37,7 +37,7 @@ const Header = () => {
           }}
         >
           <div className="container-fluid">
-            <Link className="navbar-brand nav-link" to="/">
+            <Link className="navbar-brand nav-link" to="/home">
               <strong>kiwi</strong>
             </Link>
             <button
@@ -54,7 +54,7 @@ const Header = () => {
             <div className="collapse navbar-collapse" id="navbarExample01">
               <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                 <li className="nav-item active">
-                  <Link className="nav-link" to="#intro">
+                  <Link className="nav-link" to="/home">
                     Home
                   </Link>
                 </li>
@@ -79,7 +79,7 @@ const Header = () => {
                   >
                     Danh Mục
                   </Link>
-                  <ul className="dropdown-menu"  aria-labelledby="productDropdown">
+                  <ul className="dropdown-menu" aria-labelledby="productDropdown">
                     {menus.map((menu) => (
                       <li key={menu.TenLoaiHoa}>
                         <Link className="dropdown-item" to={`/hoa-tiec-cuoi/${menu.TenLoaiHoa}`}>
@@ -91,13 +91,33 @@ const Header = () => {
                 </li>
               </ul>
               <ul className="navbar-nav list-inline">
-                <li className="">
-                  <Link className="nav-link" to="/youtube">
-                    <i className="fab fa-youtube" />
+                
+                <li className="nav-item dropdown">
+                  <Link
+                    className="nav-link dropdown-toggle"
+                    to="#"
+                    id="userDropdown"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    <i className="fa-solid fa-circle-user"></i>
                   </Link>
+                  <ul className="dropdown-menu custom-dropdown-menu" aria-labelledby="userDropdown">
+                    <li>
+                      <Link className="dropdown-item" to="/login">
+                        Login
+                      </Link>
+                    </li>
+                    <li>
+                      <Link className="dropdown-item" to="/register">
+                        Register
+                      </Link>
+                    </li>
+                  </ul>
                 </li>
                 <li className="">
-                  <Link className="nav-link" to="/facebook">
+                  <Link className="nav-link" to="https://www.facebook.com/?locale=vi_VN">
                     <i className="fab fa-facebook-f" />
                   </Link>
                 </li>
@@ -107,7 +127,7 @@ const Header = () => {
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link" to="/github">
+                  <Link className="nav-link" to="https://github.com/">
                     <i className="fab fa-github" />
                   </Link>
                 </li>
@@ -146,11 +166,6 @@ const Header = () => {
                   backgroundColor: "rgba(0, 0, 0, 0.3)",
                 }}
               >
-                <div className="d-flex justify-content-center align-items-center h-100">
-                  <div className="text-white text-center">
-                    <h2>You can place here any content</h2>
-                  </div>
-                </div>
               </div>
             </div>
             <div className="carousel-item ">
@@ -158,38 +173,30 @@ const Header = () => {
                 className="mask"
                 style={{
                   background:
-                    "linear-gradient(45deg, rgba(29, 236, 197, 0.7), rgba(91, 14, 214, 0.7) 100%)",
+                    "linear-gradient(45deg, rgba(239, 254, 251, 0.7), rgba(91, 14, 214, 0.7) 100%)",
                 }}
               >
-                <div className="d-flex justify-content-center align-items-center h-100">
-                  <div className="text-white text-center">
-                    <h2>And cover it with any mask</h2>
-                    <Link className="btn btn-outline-light btn-lg m-2" to="/learn-masks">
-                      Learn about masks
-                    </Link>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
-          <a
+          <Link
             className="carousel-control-prev"
             data-bs-slide="prev"
-            href="#introCarousel"
+            to="#introCarousel"
             role="button"
           >
             <span aria-hidden="true" className="carousel-control-prev-icon" />
             <span className="sr-only">Previous</span>
-          </a>
-          <a
+          </Link>
+          <Link
             className="carousel-control-next"
             data-bs-slide="next"
-            href="#introCarousel"
+            to="#introCarousel"
             role="button"
           >
             <span aria-hidden="true" className="carousel-control-next-icon" />
             <span className="sr-only">Next</span>
-          </a>
+          </Link>
         </div>
       </header>
     </div>

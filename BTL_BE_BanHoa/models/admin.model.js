@@ -27,22 +27,22 @@ admin.getAll = (callback) => {
 
 admin.insert = (admin, callback) => {
   const sqlString = "INSERT INTO admin SET ?";
-  db.query(sqlString, {tableName}, (err, res) => {
+  db.query(sqlString, admin, (err, res) => {
     if (err) return callback(err);
-    callback({ id: res.insertId, ...{tableName} });
+    callback({ id: res.insertId, ...admin });
   });
 };
 
 admin.update = (admin, id, callback) => {
   const sqlString = "UPDATE admin SET ? WHERE id = ?";
-  db.query(sqlString, [{tableName}, id], (err, res) => {
+  db.query(sqlString, [admin, id], (err, res) => {
     if (err) return callback(err);
     callback("Cập nhật thành công");
   });
 };
 
 admin.delete = (id, callback) => {
-  db.query("DELETE FROM {tableName} WHERE id = ?", id, (err, res) => {
+  db.query("DELETE FROM admin WHERE id = ?", id, (err, res) => {
     if (err) return callback(err);
     callback("Xóa thành công");
   });
@@ -51,6 +51,22 @@ admin.delete = (id, callback) => {
 admin.findByCredentials = (userName, password, callback) => {
   const sqlString = "SELECT * FROM admin WHERE TenDangNhap = ? AND MatKhau = ?";
   db.query(sqlString, [userName, password], (err, result) => {
+    if (err) return callback(err);
+    callback(null, result);
+  });
+};
+
+admin.updateStatus = (id, status, callback) => {
+  const sqlString = "UPDATE admin SET TrangThai = ? WHERE MaAdmin = ?";
+  db.query(sqlString, [status, id], (err, result) => {
+    if (err) return callback(err);
+    callback(null, result);
+  });
+};
+
+admin.resetStatus = (callback) => {
+  const sqlString = "UPDATE admin SET TrangThai = 0";
+  db.query(sqlString, (err, result) => {
     if (err) return callback(err);
     callback(null, result);
   });

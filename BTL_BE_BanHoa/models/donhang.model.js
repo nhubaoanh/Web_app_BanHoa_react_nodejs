@@ -24,22 +24,22 @@ donhang.getAll = (callback) => {
 
 donhang.insert = (donhang, callback) => {
   const sqlString = "INSERT INTO donhang SET ?";
-  db.query(sqlString, {tableName}, (err, res) => {
+  db.query(sqlString, donhang, (err, res) => {
     if (err) return callback(err);
-    callback({ id: res.insertId, ...{tableName} });
+    callback({ id: res.insertId, ...donhang });
   });
 };
 
 donhang.update = (donhang, id, callback) => {
   const sqlString = "UPDATE donhang SET ? WHERE id = ?";
-  db.query(sqlString, [{tableName}, id], (err, res) => {
+  db.query(sqlString, [donhang, id], (err, res) => {
     if (err) return callback(err);
     callback("Cập nhật thành công");
   });
 };
 
 donhang.delete = (id, callback) => {
-  db.query("DELETE FROM {tableName} WHERE id = ?", id, (err, res) => {
+  db.query("DELETE FROM donhang WHERE id = ?", id, (err, res) => {
     if (err) return callback(err);
     callback("Xóa thành công");
   });

@@ -64,6 +64,7 @@ const Product = () => {
         }); // Reset form
         setImagePreview(null); // Reset ảnh đã chọn
         setSelectedFile(null); // Reset tệp ảnh đã chọn
+        setItems({}); // Reset form
         console.log("Thêm sản phẩm thành công:", response.data);
       })
       .catch((error) => {

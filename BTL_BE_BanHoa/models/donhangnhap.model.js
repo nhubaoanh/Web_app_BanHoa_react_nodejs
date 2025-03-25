@@ -25,22 +25,22 @@ donhangnhap.getAll = (callback) => {
 
 donhangnhap.insert = (donhangnhap, callback) => {
   const sqlString = "INSERT INTO donhangnhap SET ?";
-  db.query(sqlString, {tableName}, (err, res) => {
+  db.query(sqlString, donhangnhap, (err, res) => {
     if (err) return callback(err);
-    callback({ id: res.insertId, ...{tableName} });
+    callback({ id: res.insertId, ...donhangnhap });
   });
 };
 
 donhangnhap.update = (donhangnhap, id, callback) => {
   const sqlString = "UPDATE donhangnhap SET ? WHERE id = ?";
-  db.query(sqlString, [{tableName}, id], (err, res) => {
+  db.query(sqlString, [donhangnhap, id], (err, res) => {
     if (err) return callback(err);
     callback("Cập nhật thành công");
   });
 };
 
 donhangnhap.delete = (id, callback) => {
-  db.query("DELETE FROM {tableName} WHERE id = ?", id, (err, res) => {
+  db.query("DELETE FROM donhangnhap WHERE id = ?", id, (err, res) => {
     if (err) return callback(err);
     callback("Xóa thành công");
   });

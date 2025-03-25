@@ -25,22 +25,22 @@ nhanvien.getAll = (callback) => {
 
 nhanvien.insert = (nhanvien, callback) => {
   const sqlString = "INSERT INTO nhanvien SET ?";
-  db.query(sqlString, {tableName}, (err, res) => {
+  db.query(sqlString, nhanvien, (err, res) => {
     if (err) return callback(err);
-    callback({ id: res.insertId, ...{tableName} });
+    callback({ id: res.insertId, ...nhanvien });
   });
 };
 
 nhanvien.update = (nhanvien, id, callback) => {
   const sqlString = "UPDATE nhanvien SET ? WHERE id = ?";
-  db.query(sqlString, [{tableName}, id], (err, res) => {
+  db.query(sqlString, [nhanvien, id], (err, res) => {
     if (err) return callback(err);
     callback("Cập nhật thành công");
   });
 };
 
 nhanvien.delete = (id, callback) => {
-  db.query("DELETE FROM {tableName} WHERE id = ?", id, (err, res) => {
+  db.query("DELETE FROM nhanvien WHERE id = ?", id, (err, res) => {
     if (err) return callback(err);
     callback("Xóa thành công");
   });

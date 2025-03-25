@@ -25,22 +25,22 @@ nhacungcap.getAll = (callback) => {
 
 nhacungcap.insert = (nhacungcap, callback) => {
   const sqlString = "INSERT INTO nhacungcap SET ?";
-  db.query(sqlString, {tableName}, (err, res) => {
+  db.query(sqlString, nhacungcap, (err, res) => {
     if (err) return callback(err);
-    callback({ id: res.insertId, ...{tableName} });
+    callback({ id: res.insertId, ...nhacungcap });
   });
 };
 
 nhacungcap.update = (nhacungcap, id, callback) => {
   const sqlString = "UPDATE nhacungcap SET ? WHERE id = ?";
-  db.query(sqlString, [{tableName}, id], (err, res) => {
+  db.query(sqlString, [nhacungcap, id], (err, res) => {
     if (err) return callback(err);
     callback("Cập nhật thành công");
   });
 };
 
 nhacungcap.delete = (id, callback) => {
-  db.query("DELETE FROM {tableName} WHERE id = ?", id, (err, res) => {
+  db.query("DELETE FROM nhacungcap WHERE id = ?", id, (err, res) => {
     if (err) return callback(err);
     callback("Xóa thành công");
   });

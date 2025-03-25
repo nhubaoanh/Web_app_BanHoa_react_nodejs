@@ -25,22 +25,22 @@ khuyenmai.getAll = (callback) => {
 
 khuyenmai.insert = (khuyenmai, callback) => {
   const sqlString = "INSERT INTO khuyenmai SET ?";
-  db.query(sqlString, {tableName}, (err, res) => {
+  db.query(sqlString, khuyenmai, (err, res) => {
     if (err) return callback(err);
-    callback({ id: res.insertId, ...{tableName} });
+    callback({ id: res.insertId, ...khuyenmai });
   });
 };
 
 khuyenmai.update = (khuyenmai, id, callback) => {
   const sqlString = "UPDATE khuyenmai SET ? WHERE id = ?";
-  db.query(sqlString, [{tableName}, id], (err, res) => {
+  db.query(sqlString, [khuyenmai, id], (err, res) => {
     if (err) return callback(err);
     callback("Cập nhật thành công");
   });
 };
 
 khuyenmai.delete = (id, callback) => {
-  db.query("DELETE FROM {tableName} WHERE id = ?", id, (err, res) => {
+  db.query("DELETE FROM khuyenmai WHERE id = ?", id, (err, res) => {
     if (err) return callback(err);
     callback("Xóa thành công");
   });

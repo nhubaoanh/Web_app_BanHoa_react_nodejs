@@ -25,22 +25,22 @@ chitietdonhang.getAll = (callback) => {
 
 chitietdonhang.insert = (chitietdonhang, callback) => {
   const sqlString = "INSERT INTO chitietdonhang SET ?";
-  db.query(sqlString, {tableName}, (err, res) => {
+  db.query(sqlString, chitietdonhang, (err, res) => {
     if (err) return callback(err);
-    callback({ id: res.insertId, ...{tableName} });
+    callback({ id: res.insertId, ...chitietdonhang });
   });
 };
 
 chitietdonhang.update = (chitietdonhang, id, callback) => {
   const sqlString = "UPDATE chitietdonhang SET ? WHERE id = ?";
-  db.query(sqlString, [{tableName}, id], (err, res) => {
+  db.query(sqlString, [chitietdonhang, id], (err, res) => {
     if (err) return callback(err);
     callback("Cập nhật thành công");
   });
 };
 
 chitietdonhang.delete = (id, callback) => {
-  db.query("DELETE FROM {tableName} WHERE id = ?", id, (err, res) => {
+  db.query("DELETE FROM chitietdonhang WHERE id = ?", id, (err, res) => {
     if (err) return callback(err);
     callback("Xóa thành công");
   });

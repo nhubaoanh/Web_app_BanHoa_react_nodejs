@@ -1,9 +1,46 @@
-
+import React, { useState } from 'react';
+import api from '../../services/api';
 
 const Register = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (formData.password !== formData.confirmPassword) {
+      alert('Passwords do not match');
+      return;
+    }
+
+    try {
+      const response = await api.post('/api/admin/', {
+        TenDangNhap: formData.name,
+        Email: formData.email,
+        MatKhau: formData.password,
+      });
+      alert('User registered successfully');
+      console.log(response.data);
+    } catch (error) {
+      console.error('Error registering user:', error);
+      alert('Error registering user');
+    }
+  };
+
   return (
     <div>
-      <section className="vh-100" style={{ backgroundColor: "#eee" }}>
+      <section className="vh-80" style={{ backgroundColor: "#eee" }}>
         <div className="container h-100">
           <div className="row d-flex justify-content-center align-items-center h-100">
             <div className="col-lg-12 col-xl-11">
@@ -14,7 +51,7 @@ const Register = () => {
                       <p className="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">
                         Sign up
                       </p>
-                      <form className="mx-1 mx-md-4">
+                      <form className="mx-1 mx-md-4" onSubmit={handleSubmit}>
                         <div className="d-flex flex-row align-items-center mb-4">
                           <i className="fas fa-user fa-lg me-3 fa-fw" />
                           <div
@@ -25,6 +62,10 @@ const Register = () => {
                               type="text"
                               id="form3Example1c"
                               className="form-control"
+                              name="name"
+                              value={formData.name}
+                              onChange={handleChange}
+                              required
                             />
                             <label className="form-label" htmlFor="form3Example1c">
                               Your Name
@@ -41,6 +82,10 @@ const Register = () => {
                               type="email"
                               id="form3Example3c"
                               className="form-control"
+                              name="email"
+                              value={formData.email}
+                              onChange={handleChange}
+                              required
                             />
                             <label className="form-label" htmlFor="form3Example3c">
                               Your Email
@@ -57,6 +102,10 @@ const Register = () => {
                               type="password"
                               id="form3Example4c"
                               className="form-control"
+                              name="password"
+                              value={formData.password}
+                              onChange={handleChange}
+                              required
                             />
                             <label className="form-label" htmlFor="form3Example4c">
                               Password
@@ -73,6 +122,10 @@ const Register = () => {
                               type="password"
                               id="form3Example4cd"
                               className="form-control"
+                              name="confirmPassword"
+                              value={formData.confirmPassword}
+                              onChange={handleChange}
+                              required
                             />
                             <label className="form-label" htmlFor="form3Example4cd">
                               Repeat your password
@@ -85,6 +138,7 @@ const Register = () => {
                             type="checkbox"
                             defaultValue=""
                             id="form2Example3c"
+                            required
                           />
                           <label className="form-check-label" htmlFor="form2Example3">
                             I agree all statements in{" "}
@@ -93,14 +147,13 @@ const Register = () => {
                         </div>
                         <div className="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
                           <button
-                            type="button"
+                            type="submit"
                             data-mdb-button-init=""
                             data-mdb-ripple-init=""
                             className="btn btn-primary btn-lg"
                           >
                             Register
                           </button>
-
                           <button
                             type="button"
                             data-mdb-button-init=""
@@ -126,9 +179,8 @@ const Register = () => {
           </div>
         </div>
       </section>
-
     </div>
-  )
-}
+  );
+};
 
-export default Register
+export default Register;

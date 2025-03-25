@@ -36,9 +36,15 @@
 
 .navbar .nav-link {
   color: #fff !important;
+  margin-right: 10px;
+  position: relative;
+  top: 0;
+  right: 0;
+  left: 0;
 }
 .nav-item.dropdown:hover .dropdown-menu {
   display: block;
 }
+
 
 

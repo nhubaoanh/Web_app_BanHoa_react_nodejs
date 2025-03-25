@@ -1,26 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import api from '../../services/api';
 
 const Login = () => {
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-
+  const [admin, setAdmin] = useState([]);
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post("http://localhost:8080/api/admin/login", { userName, password });
-      const { token } = response.data;
+      const response = await api.post("/api/admin/login", { userName, password });
+      const { token, quyenHan } = response.data;
       console.log(response.data);
       localStorage.setItem('token', token);
+      localStorage.setItem('quyenHan', quyenHan);
       console.log('jwt token:', token);
       alert('Login successful');
-      navigate('/home'); // Chuyển hướng đến trang Home
+
+      // Điều hướng dựa trên quyền hạn
+      if (quyenHan === 'nhanvien') {
+        navigate('/admin/Product'); // Chuyển hướng đến trang quản lý sản phẩm
+      } else if (quyenHan === 'quanly') {
+        navigate('/admin/Custom'); // Chuyển hướng đến trang quản lý người dùng, khách hàng, nhà cung cấp
+      } else {
+        navigate('/home'); // Chuyển hướng đến trang Home mặc định
+      }
     } catch (error) {
       alert('Invalid username or password');
     }
   };
+
 
   return (
     <div>

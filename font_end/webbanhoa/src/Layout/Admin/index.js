@@ -10,7 +10,7 @@ const Admin = () => {
         <nav id="sidebarMenu" className="collapse d-lg-block sidebar collapse bg-white">
           <div className="position-sticky">
             <div className="list-group list-group-flush mx-3 mt-4">
-              <Link to="#" className="list-group-item list-group-item-action py-2 ripple" aria-current="true">
+              <Link to="/admin/dashboard" className="list-group-item list-group-item-action py-2 ripple" aria-current="true">
                 <i className="fas fa-tachometer-alt fa-fw me-3" />
                 <span>Main dashboard</span>
               </Link>

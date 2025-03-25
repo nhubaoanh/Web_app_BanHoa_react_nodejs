@@ -9,6 +9,7 @@ import Product from "../Pages/Manage/Product";
 import LayoutAdmin from "../components/LayoutAdmin";
 import Custom from "../Pages/Manage/Custom";
 import Nhacc from "../Pages/Manage/Nhacc";
+import Dashboard from "../Pages/Manage/Dashboard";
 
 
 export const routes = [
@@ -53,6 +54,10 @@ export const routes = [
       {
         path : "nhacc",
         element : <Nhacc/>
+      },
+      {
+        path : "dashboard",
+        element : <Dashboard/>
       }
     ],
   },

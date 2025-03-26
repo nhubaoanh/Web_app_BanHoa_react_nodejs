@@ -45,4 +45,18 @@ donhang.delete = (id, callback) => {
   });
 };
 
+donhang.createOrderWithDetails = (orderData, callback) =>{
+  const {MaKhachHang, NgayDatHang, TongTien, TrangThai, listjson_chitiet } = orderData;
+
+  const sqlString = `CALL sp_orders_create(?, ?, ?, ?, ?)`;
+  db.query(
+    sqlString,
+    [MaKhachHang, NgayDatHang, TongTien, TrangThai, JSON.stringify(listjson_chitiet)],
+    (err, result) => {
+      if(err) return callback(err);
+      callback(result);
+    }
+  )
+}
+
 export default donhang;

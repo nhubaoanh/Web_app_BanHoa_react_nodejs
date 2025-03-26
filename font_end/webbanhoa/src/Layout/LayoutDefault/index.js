@@ -9,7 +9,7 @@ function LayoutDefault() {
       <header>
         <Headers/>
       </header>
-      <main>
+      <main style={{ backgroundColor: "#FDDDEA" }}>
         {/* cho phép bạn xây dựng các layout có cấu trúc định tuyến lồng nhau,
          giúp quản lý và hiển thị các component 
         con một cách linh hoạt dựa trên cấu hình route của bạn. */}

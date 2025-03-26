@@ -2,7 +2,7 @@ const Footer = () => {
     return (
       <div>
         <>
-          <footer className="text-white text-center text-lg-start" style={{ backgroundColor: "#23242a" }}>
+          <footer className="text-white text-center text-lg-start" style={{ backgroundColor: "#F098BE" }}>
             {/* Grid container */}
             <div className="p-4">
               {/*Grid row*/}

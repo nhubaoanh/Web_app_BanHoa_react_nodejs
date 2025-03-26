@@ -7,7 +7,7 @@ const Login = () => {
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-  const [admin, setAdmin] = useState([]);
+
 
   const handleLogin = async () => {
     try {
@@ -35,7 +35,7 @@ const Login = () => {
 
   return (
     <div>
-      <section className="vh-100">
+      <section className="vh-80">
         <div className="container-fluid h-custom">
           <div className="row d-flex justify-content-center align-items-center h-100">
             <div className="col-md-9 col-lg-6 col-xl-5">

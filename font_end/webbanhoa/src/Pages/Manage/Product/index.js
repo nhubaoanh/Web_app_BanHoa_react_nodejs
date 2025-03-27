@@ -33,17 +33,22 @@ const Product = () => {
   const [imagePreview, setImagePreview] = useState(null); // State để lưu trữ URL của ảnh đã chọn
   const [selectedFile, setSelectedFile] = useState(null); // State để lưu trữ tệp ảnh đã chọn
 
-  // Gọi API để lấy danh sách sản phẩm
-  useEffect(() => {
-    api
-      .get("/api/sanpham")
-      .then((response) => {
-        setItems(response.data); // Lưu dữ liệu vào state
-      })
-      .catch((error) => {
-        console.log("Lỗi khi lấy danh sách sản phẩm:", error);
-      });
-  }, []);
+    // Hàm lấy danh sách sản phẩm
+    const fetchProducts = () => {
+      api
+        .get("/api/sanpham")
+        .then((response) => {
+          setItems(response.data); // Lưu dữ liệu vào state
+        })
+        .catch((error) => {
+          console.log("Lỗi khi lấy danh sách sản phẩm:", error);
+        });
+    };
+  
+    // Gọi API để lấy danh sách sản phẩm khi component được render lần đầu
+    useEffect(() => {
+      fetchProducts();
+    }, []);
 
   const filteredItems = items.filter(item =>
     item.TenHoa && item.TenHoa.toLowerCase().includes(searchTerm.toLowerCase())
@@ -66,6 +71,7 @@ const Product = () => {
         }
       })
       .then((response) => {
+        fetchProducts(); // Tải lại danh sách sản phẩm
         setItems([...items, response.data]); // Cập nhật danh sách sản phẩm
         setNewProduct({
           MaSanPham: '',
@@ -107,6 +113,7 @@ const Product = () => {
           item.MaSanPham === newProduct.MaSanPham ? response.data : item
         );
         setItems(updatedItems); // Cập nhật danh sách sản phẩm
+        fetchProducts(); // Tải lại danh sách sản phẩm
         setNewProduct({
           MaSanPham: '',
           TenHoa: '',
@@ -132,6 +139,7 @@ const Product = () => {
       .then((response) => {
         const updatedItems = items.filter(item => item.MaSanPham !== newProduct.MaSanPham);
         setItems(updatedItems); // Cập nhật danh sách sản phẩm
+        fetchProducts(); // Tải lại danh sách sản phẩm
         setNewProduct({
           MaSanPham: '',
           TenHoa: '',

@@ -31,6 +31,10 @@ const sanphamController = {
   delete: (req, res) => {
     const id = req.params.id;
     sanpham.delete(id, (result) => res.send(result));
+  },
+  getByCategory: (req, res) => {
+    const categoryId = req.params.categoryId;
+    sanpham.getByCategory(categoryId, (result) => res.send(result));
   }
 };
 export default sanphamController

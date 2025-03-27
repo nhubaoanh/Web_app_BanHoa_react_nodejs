@@ -32,5 +32,6 @@ router.get('/:id', sanphamController.getById);
 router.post('/', upload.single('HinhAnh'), sanphamController.insert);
 router.put('/:id', upload.single('HinhAnh'), sanphamController.update);
 router.delete('/:id', sanphamController.delete);
+router.get('/category/:categoryId', sanphamController.getByCategory);
 
 export default router;

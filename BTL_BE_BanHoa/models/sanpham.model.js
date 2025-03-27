@@ -58,4 +58,12 @@ sanpham.delete = (id, callback) => {
   });
 };
 
+sanpham.getByCategory = (categoryId, callback) => {
+  const sqlString = "SELECT * FROM sanpham WHERE MaLoaiHoa = ?";
+  db.query(sqlString, [categoryId], (err, result) => {
+    if (err) return callback(err);
+    callback(result);
+  });
+};
+
 export default sanpham;

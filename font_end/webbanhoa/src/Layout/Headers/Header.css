@@ -3,25 +3,25 @@
 .carousel-inner,
 .carousel-item,
 .carousel-item.active {
-  height: 100vh;
+  height: 60vh;
 }
 
 .carousel-item:nth-child(1) {
-  background-image: url('https://mdbootstrap.com/img/Photos/Others/images/76.jpg');
+  background-image: url('https://png.pngtree.com/background/20230612/original/pngtree-some-beautiful-roses-bursting-with-color-picture-image_3173999.jpg');
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
 }
 
 .carousel-item:nth-child(2) {
-  background-image: url('https://mdbootstrap.com/img/Photos/Others/images/77.jpg');
+  background-image: url('https://png.pngtree.com/background/20230610/original/pngtree-various-colored-roses-are-sitting-on-top-of-a-brown-background-picture-image_3102685.jpg');
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
 }
 
 .carousel-item:nth-child(3) {
-  background-image: url('https://mdbootstrap.com/img/Photos/Others/images/78.jpg');
+  background-image: url('https://png.pngtree.com/thumb_back/fw800/background/20240204/pngtree-colorful-flower-background-valentines-or-wedding-image_15601589.png');
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;

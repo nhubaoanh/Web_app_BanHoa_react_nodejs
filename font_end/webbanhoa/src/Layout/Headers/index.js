@@ -53,6 +53,9 @@ const Header = () => {
     }
   };
 
+  const handleCategoryClick = (MaLoaiHoa) => {
+    navigate(`/home?MaLoaiHoa=${MaLoaiHoa}`); // Chuyển hướng đến trang Home với MaLoaiHoa
+  };
 
   return (
     <div>
@@ -147,12 +150,12 @@ const Header = () => {
                   >
                     {menus.map((menu) => (
                       <li key={menu.TenLoaiHoa}>
-                        <Link
-                          className="dropdown-item text-decoration-none"
-                          to={`/hoa-tiec-cuoi/${menu.TenLoaiHoa}`}
-                        >
-                          {menu.TenLoaiHoa}
-                        </Link>
+                        <button
+                        className="dropdown-item"
+                        onClick={() => handleCategoryClick(menu.MaLoaiHoa)}
+                      >
+                        {menu.TenLoaiHoa}
+                      </button>
                       </li>
                     ))}
                   </ul>

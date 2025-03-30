@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import api from '../../../services/api';
-
+import { useNavigate } from "react-router-dom";
 const Custom = () => {
   const [items, setItems] = useState([]);
   const [newCustom, setNewCustom] = useState({});
   const [action, setAction] = useState('add');
   const [searchTerm, setSearchTerm] = useState('');
-
+  const navigate = useNavigate();
   // Gọi API để lấy danh sách khách hàng
   useEffect(() => {
     api.get('/api/KhachHang')
@@ -16,6 +16,18 @@ const Custom = () => {
       .catch((error) => {
         console.log('Lỗi khi lấy danh sách khách hàng:', error);
       });
+  }, []);
+
+  // Hàm kiểm tra đăng nhập
+  const checkLogin = () => {
+    if (!localStorage.getItem("token")) {
+      navigate("/login");
+    }
+  };
+
+  // Kiểm tra đăng nhập khi component được render lần đầu
+  useEffect(() => {
+    checkLogin();
   }, []);
 
   // Lọc danh sách khách hàng dựa trên từ khóa tìm kiếm

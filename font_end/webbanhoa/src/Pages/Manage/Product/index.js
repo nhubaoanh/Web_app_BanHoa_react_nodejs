@@ -50,10 +50,10 @@ const Product = () => {
       fetchProducts();
     }, []);
 
-  const filteredItems = items.filter(item =>
-    item.TenHoa && item.TenHoa.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
+    const filteredItems = Array.isArray(items) 
+    ? items.filter(item => item.TenHoa && item.TenHoa.toLowerCase().includes(searchTerm.toLowerCase()))
+    : [];
+  
   const handleAdd = () => {
     const formData = new FormData();
     Object.keys(newProduct).forEach(key => {
@@ -133,25 +133,13 @@ const Product = () => {
   };
 
   const handleDelete = () => {
-    // Gửi yêu cầu xóa sản phẩm đến backend
+    console.log("MaSanPham cần xóa:", newProduct.MaSanPham); // Kiểm tra giá trị
     api
       .delete(`/api/sanpham/${newProduct.MaSanPham}`)
       .then((response) => {
+        console.log("Xóa sản phẩm thành công:", response.data);
         const updatedItems = items.filter(item => item.MaSanPham !== newProduct.MaSanPham);
         setItems(updatedItems); // Cập nhật danh sách sản phẩm
-        fetchProducts(); // Tải lại danh sách sản phẩm
-        setNewProduct({
-          MaSanPham: '',
-          TenHoa: '',
-          MaLoaiHoa: '',
-          GiaBan: '',
-          MoTa: '',
-          HinhAnh: '',
-          NgayThem: ''
-        }); // Reset form
-        setImagePreview(null); // Reset ảnh đã chọn
-        setSelectedFile(null); // Reset tệp ảnh đã chọn
-        console.log("Xóa sản phẩm thành công:", response.data);
       })
       .catch((error) => {
         console.log("Lỗi khi xóa sản phẩm:", error);

@@ -1,4 +1,5 @@
 import db from "../common/db";
+import moment from 'moment'; // Import thư viện moment để xử lý thời gian
 const khachhang = (khachhang) => {
 this.MaKhachHang = khachhang.MaKhachHang;
 this.HoTen = khachhang.HoTen;
@@ -39,20 +40,33 @@ khachhang.insert = (khachhang, callback) => {
 //   });
 // };
 
-khachhang.update = (khachhang, id, callback) => {
-  const sqlString = "CALL SuaKhachHang(?, ?, ?, ?, ?, ?)";
+khachhang.update = (data, id, callback) => {
+  // Chuyển đổi định dạng NgayTao
+  const formattedNgayTao = moment(data.NgayTao).format('YYYY-MM-DD HH:mm:ss');
+
+  const sqlString = `
+    UPDATE khachhang
+    SET HoTen = ?, SoDienThoai = ?, Email = ?, DiaChi = ?, NgayTao = ?
+    WHERE MaKhachHang = ?
+  `;
   const values = [
-    id,
-    khachhang.HoTen,
-    khachhang.SoDienThoai,
-    khachhang.Email,
-    khachhang.DiaChi,
-    khachhang.NgayTao
+    data.HoTen,
+    data.SoDienThoai,
+    data.Email,
+    data.DiaChi,
+    formattedNgayTao, // Sử dụng giá trị đã chuyển đổi
+    id
   ];
-  
-  db.query(sqlString, values, (err, res) => {
-    if (err) return callback(err);
-    callback("Cập nhật thành công");
+
+  db.query(sqlString, values, (err, result) => {
+    if (err) {
+      console.error("Lỗi khi cập nhật khách hàng:", err);
+      return callback({ success: false, message: "Lỗi khi cập nhật khách hàng" });
+    }
+    if (result.affectedRows === 0) {
+      return callback({ success: false, message: "Không tìm thấy khách hàng để cập nhật" });
+    }
+    callback({ success: true, message: "Cập nhật thành công", data: result });
   });
 };
 

@@ -47,3 +47,55 @@ body {
     flex-direction: column;
     min-height: 100vh;
   }
+
+  /* admin.css */
+.list-group-item.active {
+  background-color: #007bff !important;
+  color: white !important;
+  font-weight: bold;
+}
+
+/* admin.css */
+.navbar {
+  background-color: #007bff !important;
+  color: white;
+}
+
+.navbar .navbar-brand {
+  font-weight: bold;
+  color: white !important;
+}
+
+.navbar .form-control {
+  border-radius: 20px;
+}
+
+.navbar .form-control:focus {
+  box-shadow: none;
+  border-color: #0056b3;
+}
+
+.navbar .btn-primary {
+  border-radius: 20px;
+}
+
+.navbar .dropdown-menu {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.list-group-item.active {
+  background-color: #0056b3 !important;
+  color: white !important;
+  font-weight: bold;
+}

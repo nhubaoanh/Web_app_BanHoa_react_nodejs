@@ -11,6 +11,7 @@ import Custom from "../Pages/Manage/Custom";
 import Nhacc from "../Pages/Manage/Nhacc";
 import Dashboard from "../Pages/Manage/Dashboard";
 import Orders from "../Pages/Manage/Order";
+import Seo from "../Pages/Manage/Seo";
 
 
 export const routes = [
@@ -63,6 +64,10 @@ export const routes = [
       {
         path : "order",
         element : <Orders/>
+      },
+      {
+        path : "seo",
+        element : <Seo/>
       }
     ],
   },

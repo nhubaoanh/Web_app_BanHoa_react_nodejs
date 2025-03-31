@@ -18,6 +18,8 @@ const khachhangController = {
   update: (req, res) => {
     const data = req.body;
     const id = req.params.id;
+    console.log("Dữ liệu nhận được từ frontend:", data);
+    console.log("ID khách hàng:", id);
     khachhang.update(data, id, (result) => res.send(result));
   },
 

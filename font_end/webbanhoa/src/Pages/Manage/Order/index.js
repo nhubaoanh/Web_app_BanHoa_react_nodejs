@@ -17,12 +17,14 @@ const Orders = () => {
     SoLuong: '',
     GiaBan: '',
   });
+  const [action, setAction] = useState('add'); // Quản lý trạng thái hành động (add, edit, delete)
+  const [currentOrder, setCurrentOrder] = useState(null); // Đơn hàng hiện tại để sửa hoặc xóa
   const [showModal, setShowModal] = useState(false);
-  const [showProductForm, setShowProductForm] = useState(false); // Quản lý hiển thị form sản phẩm
+  const [showProductForm, setShowProductForm] = useState(false);
 
   // State cho phân trang
-  const [currentPage, setCurrentPage] = useState(0); // Trang hiện tại
-  const itemsPerPage = 10; // Số lượng đơn hàng mỗi trang
+  const [currentPage, setCurrentPage] = useState(0);
+  const itemsPerPage = 10;
 
   useEffect(() => {
     api.get(`/api/donhang`)
@@ -34,6 +36,7 @@ const Orders = () => {
       });
   }, []);
 
+  // Thêm đơn hàng
   const handleAddOrder = () => {
     api.post('/api/donhang/create-with-details', newOrder)
       .then((response) => {
@@ -47,6 +50,40 @@ const Orders = () => {
       });
   };
 
+  // Sửa đơn hàng
+  const handleEditOrder = () => {
+    api.put(`/api/donhang/${currentOrder.MaDonHang}`, newOrder)
+      .then((response) => {
+        alert('Sửa đơn hàng thành công!');
+        const updatedItems = items.map((item) =>
+          item.MaDonHang === response.data.MaDonHang ? response.data : item
+        );
+        setItems(updatedItems);
+        setShowModal(false);
+      })
+      .catch((error) => {
+        console.error('Lỗi khi sửa đơn hàng:', error);
+        alert('Sửa đơn hàng thất bại!');
+      });
+  };
+
+  // Xóa đơn hàng
+  const handleDeleteOrder = () => {
+    api.delete(`/api/donhang/${currentOrder.MaDonHang}`)
+      .then((res) => {
+        alert('Xóa đơn hàng thành công!');
+        console.log("xóa thành công ",res.data );
+        const updatedItems = items.filter((item) => item.MaDonHang !== currentOrder.MaDonHang);
+        setItems(updatedItems);
+        setShowModal(false);
+      })
+      .catch((error) => {
+        console.error('Lỗi khi xóa đơn hàng:', error);
+        alert('Xóa đơn hàng thất bại!');
+      });
+  };
+
+  // Xử lý thay đổi input cho đơn hàng
   const handleOrderInputChange = (e) => {
     const { name, value } = e.target;
     setNewOrder((prevOrder) => ({
@@ -55,6 +92,7 @@ const Orders = () => {
     }));
   };
 
+  // Xử lý thay đổi input cho sản phẩm
   const handleProductInputChange = (e) => {
     const { name, value } = e.target;
     setNewProduct((prevProduct) => ({
@@ -63,6 +101,7 @@ const Orders = () => {
     }));
   };
 
+  // Thêm sản phẩm vào đơn hàng
   const handleAddProductToOrder = () => {
     setNewOrder((prevOrder) => ({
       ...prevOrder,
@@ -85,6 +124,17 @@ const Orders = () => {
     setCurrentPage(event.selected);
   };
 
+  // Xử lý khi nhấn nút lưu trong modal
+  const handleSubmit = () => {
+    if (action === 'add') {
+      handleAddOrder();
+    } else if (action === 'edit') {
+      handleEditOrder();
+    } else if (action === 'delete') {
+      handleDeleteOrder();
+    }
+  };
+
   return (
     <div>
       <div className="container">
@@ -92,108 +142,20 @@ const Orders = () => {
 
         <button
           className="btn btn-primary mb-4"
-          onClick={() => setShowModal(true)}
+          onClick={() => {
+            setAction('add');
+            setNewOrder({
+              MaKhachHang: '',
+              NgayDatHang: '',
+              TongTien: '',
+              TrangThai: '',
+              listjson_chitiet: [],
+            });
+            setShowModal(true);
+          }}
         >
           Thêm đơn hàng
         </button>
-
-        {showModal && (
-          <div className="modal-overlay">
-            <div className="modal-content">
-              <h3>Thêm đơn hàng mới</h3>
-              <input
-                type="text"
-                className="form-control mb-2"
-                placeholder="Mã khách hàng"
-                name="MaKhachHang"
-                value={newOrder.MaKhachHang}
-                onChange={handleOrderInputChange}
-              />
-              <input
-                type="datetime-local"
-                className="form-control mb-2"
-                placeholder="Ngày đặt hàng"
-                name="NgayDatHang"
-                value={newOrder.NgayDatHang}
-                onChange={handleOrderInputChange}
-              />
-              <input
-                type="number"
-                className="form-control mb-2"
-                placeholder="Tổng tiền"
-                name="TongTien"
-                value={newOrder.TongTien}
-                onChange={handleOrderInputChange}
-              />
-              <input
-                type="text"
-                className="form-control mb-2"
-                placeholder="Trạng thái"
-                name="TrangThai"
-                value={newOrder.TrangThai}
-                onChange={handleOrderInputChange}
-              />
-
-              {/* Nút hiển thị form thêm sản phẩm */}
-              <button
-                className="btn btn-secondary mb-2"
-                onClick={() => setShowProductForm(!showProductForm)}
-              >
-                {showProductForm ? "Ẩn danh sách sản phẩm" : "Thêm sản phẩm"}
-              </button>
-
-              {/* Form thêm sản phẩm */}
-              {showProductForm && (
-                <div>
-                  <h4>Thêm sản phẩm</h4>
-                  <input
-                    type="text"
-                    className="form-control mb-2"
-                    placeholder="Mã sản phẩm"
-                    name="MaSanPham"
-                    value={newProduct.MaSanPham}
-                    onChange={handleProductInputChange}
-                  />
-                  <input
-                    type="number"
-                    className="form-control mb-2"
-                    placeholder="Số lượng"
-                    name="SoLuong"
-                    value={newProduct.SoLuong}
-                    onChange={handleProductInputChange}
-                  />
-                  <input
-                    type="number"
-                    className="form-control mb-2"
-                    placeholder="Giá bán"
-                    name="GiaBan"
-                    value={newProduct.GiaBan}
-                    onChange={handleProductInputChange}
-                  />
-                  <button
-                    className="btn btn-secondary mb-2"
-                    onClick={handleAddProductToOrder}
-                  >
-                    Thêm sản phẩm vào đơn hàng
-                  </button>
-                </div>
-              )}
-
-              <button
-                className="btn btn-primary"
-                onClick={handleAddOrder}
-              >
-                Thêm đơn hàng
-              </button>
-              <button
-                className="btn btn-danger"
-                onClick={() => setShowModal(false)}
-              >
-                Đóng
-              </button>
-            </div>
-          </div>
-        )}
 
         <table className="table">
           <thead>
@@ -203,6 +165,7 @@ const Orders = () => {
               <th>Ngày đặt hàng</th>
               <th>Tổng tiền</th>
               <th>Trạng thái</th>
+              <th>Hành động</th>
             </tr>
           </thead>
           <tbody>
@@ -213,6 +176,29 @@ const Orders = () => {
                 <td>{item.NgayDatHang}</td>
                 <td>{item.TongTien}</td>
                 <td>{item.TrangThai}</td>
+                <td>
+                  <button
+                    className="btn btn-warning me-2"
+                    onClick={() => {
+                      setAction('edit');
+                      setCurrentOrder(item);
+                      setNewOrder(item);
+                      setShowModal(true);
+                    }}
+                  >
+                    Sửa
+                  </button>
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => {
+                      setAction('delete');
+                      setCurrentOrder(item);
+                      setShowModal(true);
+                    }}
+                  >
+                    Xóa
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -233,6 +219,105 @@ const Orders = () => {
           activeClassName={'active'}
         />
       </div>
+
+      {/* Modal */}
+      {showModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3>
+              {action === 'add' && 'Thêm đơn hàng mới'}
+              {action === 'edit' && 'Sửa đơn hàng'}
+              {action === 'delete' && 'Xóa đơn hàng'}
+            </h3>
+            {action !== 'delete' && (
+              <>
+                <input
+                  type="text"
+                  className="form-control mb-2"
+                  placeholder="Mã khách hàng"
+                  name="MaKhachHang"
+                  value={newOrder.MaKhachHang}
+                  onChange={handleOrderInputChange}
+                />
+                <input
+                  type="datetime-local"
+                  className="form-control mb-2"
+                  placeholder="Ngày đặt hàng"
+                  name="NgayDatHang"
+                  value={newOrder.NgayDatHang}
+                  onChange={handleOrderInputChange}
+                />
+                <input
+                  type="number"
+                  className="form-control mb-2"
+                  placeholder="Tổng tiền"
+                  name="TongTien"
+                  value={newOrder.TongTien}
+                  onChange={handleOrderInputChange}
+                />
+                <input
+                  type="text"
+                  className="form-control mb-2"
+                  placeholder="Trạng thái"
+                  name="TrangThai"
+                  value={newOrder.TrangThai}
+                  onChange={handleOrderInputChange}
+                />
+                <button
+                  className="btn btn-secondary mb-2"
+                  onClick={() => setShowProductForm(!showProductForm)}
+                >
+                  {showProductForm ? 'Ẩn danh sách sản phẩm' : 'Thêm sản phẩm'}
+                </button>
+                {showProductForm && (
+                  <div>
+                    <h4>Thêm sản phẩm</h4>
+                    <input
+                      type="text"
+                      className="form-control mb-2"
+                      placeholder="Mã sản phẩm"
+                      name="MaSanPham"
+                      value={newProduct.MaSanPham}
+                      onChange={handleProductInputChange}
+                    />
+                    <input
+                      type="number"
+                      className="form-control mb-2"
+                      placeholder="Số lượng"
+                      name="SoLuong"
+                      value={newProduct.SoLuong}
+                      onChange={handleProductInputChange}
+                    />
+                    <input
+                      type="number"
+                      className="form-control mb-2"
+                      placeholder="Giá bán"
+                      name="GiaBan"
+                      value={newProduct.GiaBan}
+                      onChange={handleProductInputChange}
+                    />
+                    <button
+                      className="btn btn-secondary mb-2"
+                      onClick={handleAddProductToOrder}
+                    >
+                      Thêm sản phẩm vào đơn hàng
+                    </button>
+                  </div>
+                )}
+              </>
+            )}
+            {action === 'delete' && <p>Bạn có chắc chắn muốn xóa đơn hàng này?</p>}
+            <button className="btn btn-primary" onClick={handleSubmit}>
+              {action === 'add' && 'Thêm đơn hàng'}
+              {action === 'edit' && 'Sửa đơn hàng'}
+              {action === 'delete' && 'Xóa đơn hàng'}
+            </button>
+            <button className="btn btn-danger" onClick={() => setShowModal(false)}>
+              Đóng
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

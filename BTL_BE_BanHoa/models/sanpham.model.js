@@ -52,7 +52,7 @@ sanpham.update = (sanpham, id, callback) => {
 };
 
 sanpham.delete = (id, callback) => {
-  db.query("DELETE FROM sanpham WHERE id = ?", id, (err, res) => {
+  db.query("DELETE FROM sanpham WHERE MaSanPham = ?", id, (err, res) => {
     if (err) return callback(err);
     callback("Xóa thành công");
   });

@@ -76,6 +76,7 @@ const Nhacc = () => {
   const handleDelete = () => {
     api.delete(`/api/nhacungcap/${newNhacc.MaNhaCungCap}`)
       .then((response) => {
+        console.log('Xóa Nhà Cung cấp thành công:',response.data);
         const newItems = item.filter(item => item.MaNhaCungCap !== newNhacc.MaNhaCungCap);
         setItem(newItems);
         setNewNhacc({});

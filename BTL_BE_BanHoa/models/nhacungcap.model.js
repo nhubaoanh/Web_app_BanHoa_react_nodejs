@@ -32,7 +32,7 @@ nhacungcap.insert = (nhacungcap, callback) => {
 };
 
 nhacungcap.update = (nhacungcap, id, callback) => {
-  const sqlString = "UPDATE nhacungcap SET ? WHERE id = ?";
+  const sqlString = "UPDATE nhacungcap SET ? WHERE MaNhaCungCap = ?";
   db.query(sqlString, [nhacungcap, id], (err, res) => {
     if (err) return callback(err);
     callback("Cập nhật thành công");
@@ -40,7 +40,7 @@ nhacungcap.update = (nhacungcap, id, callback) => {
 };
 
 nhacungcap.delete = (id, callback) => {
-  db.query("DELETE FROM nhacungcap WHERE id = ?", id, (err, res) => {
+  db.query("DELETE FROM nhacungcap WHERE MaNhaCungCap = ?", id, (err, res) => {
     if (err) return callback(err);
     callback("Xóa thành công");
   });

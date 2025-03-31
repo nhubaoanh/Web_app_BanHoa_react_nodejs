@@ -31,19 +31,44 @@ khachhang.insert = (khachhang, callback) => {
   });
 };
 
+// khachhang.update = (khachhang, id, callback) => {
+//   const sqlString = "UPDATE khachhang SET ? WHERE MaKhachHang = ?";
+//   db.query(sqlString, [khachhang, id], (err, res) => {
+//     if (err) return callback(err);
+//     callback("Cập nhật thành công");
+//   });
+// };
+
 khachhang.update = (khachhang, id, callback) => {
-  const sqlString = "UPDATE khachhang SET ? WHERE id = ?";
-  db.query(sqlString, [khachhang, id], (err, res) => {
+  const sqlString = "CALL SuaKhachHang(?, ?, ?, ?, ?, ?)";
+  const values = [
+    id,
+    khachhang.HoTen,
+    khachhang.SoDienThoai,
+    khachhang.Email,
+    khachhang.DiaChi,
+    khachhang.NgayTao
+  ];
+  
+  db.query(sqlString, values, (err, res) => {
     if (err) return callback(err);
     callback("Cập nhật thành công");
   });
 };
 
+// khachhang.delete = (id, callback) => {
+//   db.query("DELETE FROM khachhang WHERE MaKhachHang = ?", id, (err, res) => {
+//     if (err) return callback(err);
+//     callback("Xóa thành công");
+//   });
+// };
 khachhang.delete = (id, callback) => {
-  db.query("DELETE FROM khachhang WHERE id = ?", id, (err, res) => {
+  const sqlString = "CALL XoaKhachHang(?)"; // Gọi Stored Procedure
+  db.query(sqlString, [id], (err, res) => {
     if (err) return callback(err);
     callback("Xóa thành công");
   });
 };
+
 
 export default khachhang;

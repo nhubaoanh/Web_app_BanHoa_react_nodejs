@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import api from '../../../services/api';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.bundle.min';
 import { useNavigate } from "react-router-dom";
+// thêm thư viện này vào để chuyển trang
+import ReactPaginate from 'react-paginate';
 const Product = () => {
   const navigate = useNavigate();
+
+  const [items, setItems] = useState([]);
+    const [currentPage, setCurrentPage] = useState(0);
+    const itemsPerPage = 10;
+    const offset = currentPage * itemsPerPage;
+    const currentItems = items.slice(offset, offset + itemsPerPage);
+    const pageCount = Math.ceil(items.length / itemsPerPage);
 
   // Hàm kiểm tra đăng nhập
   const checkLogin = () => {
@@ -13,12 +20,16 @@ const Product = () => {
     }
   };
 
+  const handlePageClick = (event) => {
+    setCurrentPage(event.selected);
+  };
+
   // Kiểm tra đăng nhập khi component được render lần đầu
   useEffect(() => {
     checkLogin();
   }, []);
 
-  const [items, setItems] = useState([]);
+  
   const [searchTerm, setSearchTerm] = useState('');
   const [newProduct, setNewProduct] = useState({
     MaSanPham: '',
@@ -134,7 +145,10 @@ const Product = () => {
 
   const handleDelete = () => {
     console.log("MaSanPham cần xóa:", newProduct.MaSanPham); // Kiểm tra giá trị
-    api
+    if (!newProduct.MaSanPham) {
+      console.error("Không có MaSanPham để xóa!");
+      return;
+    }    api
       .delete(`/api/sanpham/${newProduct.MaSanPham}`)
       .then((response) => {
         console.log("Xóa sản phẩm thành công:", response.data);
@@ -203,7 +217,7 @@ const Product = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredItems.map((item, index) => (
+            {filteredItems.slice(offset, offset + itemsPerPage).map((item) => (
               <tr key={item.MaSanPham}>
                 <td>{item.MaSanPham}</td>
                 <td>{item.TenHoa}</td>
@@ -220,6 +234,19 @@ const Product = () => {
             ))}
           </tbody>
         </table>
+        <ReactPaginate
+          previousLabel={'Previous'}
+          nextLabel={'Next'}
+          breakLabel={'...'}
+          breakClassName={'break-me'}
+          pageCount={pageCount}
+          marginPagesDisplayed={2}
+          pageRangeDisplayed={5}
+          onPageChange={handlePageClick}
+          containerClassName={'pagination'}
+          subContainerClassName={'pages pagination'}
+          activeClassName={'active'}
+        />
       </div>
 
       {/* Modal for adding, editing, and deleting product */}

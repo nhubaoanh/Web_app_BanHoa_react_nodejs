@@ -31,7 +31,7 @@ donhang.insert = (donhang, callback) => {
 };
 
 donhang.update = (donhang, id, callback) => {
-  const sqlString = "UPDATE donhang SET ? WHERE id = ?";
+  const sqlString = "UPDATE donhang SET ? WHERE MaDonHang = ?";
   db.query(sqlString, [donhang, id], (err, res) => {
     if (err) return callback(err);
     callback("Cập nhật thành công");
@@ -39,7 +39,7 @@ donhang.update = (donhang, id, callback) => {
 };
 
 donhang.delete = (id, callback) => {
-  db.query("DELETE FROM donhang WHERE id = ?", id, (err, res) => {
+  db.query("DELETE FROM donhang WHERE MaDonHang = ?", id, (err, res) => {
     if (err) return callback(err);
     callback("Xóa thành công");
   });

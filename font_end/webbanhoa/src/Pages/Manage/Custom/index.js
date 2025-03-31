@@ -54,6 +54,7 @@ const Custom = () => {
 
   // Sửa thông tin khách hàng
   const handleEdit = () => {
+    console.log("MaKhachHang cần sửa:", newCustom.MaKhachHang); // Kiểm tra giá trị
     const formData = new FormData();
     Object.keys(newCustom).forEach(key => {
       formData.append(key, newCustom[key]);
@@ -61,6 +62,7 @@ const Custom = () => {
     // Gửi thông tin đến backend
     api.put(`/api/KhachHang/${newCustom.MaKhachHang}`, formData)
       .then((response) => {
+        console.log("sửa thành công : " , response.data);
         const newItems = items.map(item => item.MaKhachHang === response.data.MaKhachHang ? response.data : item);
         setItems(newItems);
         setNewCustom({});
@@ -73,8 +75,14 @@ const Custom = () => {
   // Xóa khách hàng
   const handleDelete = () => {
     // Gửi thông tin đến backend
+  console.log("MaKhachHang cần xóa:", newCustom.MaKhachHang); // Kiểm tra giá trị
+  if (!newCustom.MaKhachHang) {
+    console.error("Không có MaKhachHang để xóa!");
+    return;
+  }
     api.delete(`/api/KhachHang/${newCustom.MaKhachHang}`)
       .then((response) => {
+        console.log("xóa thành công : ", response.data);
         const newItems = items.filter(item => item.MaKhachHang !== newCustom.MaKhachHang);
         setItems(newItems);
         setNewCustom({});

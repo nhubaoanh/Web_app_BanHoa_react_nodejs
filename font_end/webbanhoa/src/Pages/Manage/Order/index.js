@@ -36,19 +36,31 @@ const Orders = () => {
       });
   }, []);
 
-  // Thêm đơn hàng
   const handleAddOrder = () => {
-    api.post('/api/donhang/create-with-details', newOrder)
+    newOrder.MaKhachHang = parseInt(newOrder.MaKhachHang, 10); // Chuyển MaKhachHang thành số nguyên
+    newOrder.TongTien = parseFloat(newOrder.TongTien).toFixed(2); // Chuyển TongTien thành số thập phân chính xác
+  
+    // Chuyển listjson_chitiet thành chuỗi JSON
+    const orderData = {
+      ...newOrder,
+      listjson_chitiet: JSON.stringify(newOrder.listjson_chitiet),
+    };
+  
+    api.post('/api/donhang/create-with-details', orderData)
       .then((response) => {
         alert('Thêm đơn hàng thành công!');
         setItems((prevItems) => [...prevItems, response.data.data]);
         setShowModal(false);
+        console.log("listjson_chitiet trước khi gửi: ", newOrder.listjson_chitiet);
+        console.log("Dữ liệu đơn hàng gửi lên: ", newOrder);
       })
       .catch((error) => {
         console.error('Lỗi khi thêm đơn hàng:', error);
         alert('Thêm đơn hàng thất bại!');
       });
   };
+  
+  
 
   // Sửa đơn hàng
   const handleEditOrder = () => {
@@ -58,6 +70,7 @@ const Orders = () => {
         const updatedItems = items.map((item) =>
           item.MaDonHang === response.data.MaDonHang ? response.data : item
         );
+        setItems(items);
         setItems(updatedItems);
         setShowModal(false);
       })

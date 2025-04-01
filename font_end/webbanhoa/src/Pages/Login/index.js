@@ -24,9 +24,13 @@ const Login = () => {
         navigate('/admin/Product'); // Chuyển hướng đến trang quản lý sản phẩm
       } else if (quyenHan === 'quanly') {
         navigate('/admin/Custom'); // Chuyển hướng đến trang quản lý người dùng, khách hàng, nhà cung cấp
-      } else {
-        navigate('/home'); // Chuyển hướng đến trang Home mặc định
+      }else if (quyenHan === 'khachhang'){
+        navigate('/home')
       }
+       else {
+        navigate('/login'); // Chuyển hướng đến trang Home mặc định
+      }
+      
     } catch (error) {
       alert('Invalid username or password');
     }

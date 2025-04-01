@@ -68,7 +68,31 @@ const adminController = {
       if (err) return res.status(500).send('Internal server error');
       res.send('Logout successful');
     });
-  }
+  },
+
+  checkStatus: (req, res) => {
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) {
+      return res.status(401).send('Unauthorized');
+    }
+  
+    try {
+      const decoded = jwt.verify(token, 'gdfhghrhghthghghghghg');
+      const userName = decoded.userName;
+  
+      admin.findByCredentials(userName, null, (err, result) => {
+        if (err) return res.status(500).send('Internal server error');
+        if (result.length > 0) {
+          const user = result[0];
+          res.send({ HoTen: user.HoTen, TrangThai: user.TrangThai });
+        } else {
+          res.status(404).send('User not found');
+        }
+      });
+    } catch (error) {
+      res.status(401).send('Invalid token');
+    }
+  },
   
 };
 export default adminController

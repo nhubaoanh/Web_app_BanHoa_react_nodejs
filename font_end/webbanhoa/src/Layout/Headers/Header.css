@@ -45,8 +45,17 @@
 .nav-item.dropdown:hover .dropdown-menu {
   display: block;
 }
+.status-icon {
+  font-size: 14px; /* Kích thước icon */
+}
 
+.status-icon.active {
+  color: #00ff00; /* Màu xanh khi hoạt động */
+}
 
+.status-icon.inactive {
+  color: #a0a0a0; /* Màu xám khi không hoạt động */
+}
 
 
 

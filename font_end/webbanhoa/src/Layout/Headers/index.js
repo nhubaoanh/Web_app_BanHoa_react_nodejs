@@ -8,30 +8,46 @@ const Header = () => {
   const [currentSlide, setCurrentSlide] = useState(0); // Quản lý trạng thái slide hiện tại
   const navigate = useNavigate();
   const [cartCount, setCartCount] = useState(0); // Quản lý số lượng sản phẩm trong giỏ hàng
-
+  const [userName, setUserName] = useState(""); // Tên người dùng đã đăng nhập
+  const [isActive, setIsActive] = useState(false); // Trạng thái hoạt động của người dùng
 
   // Gọi API khi component được render lần đầu
   useEffect(() => {
+    // Lấy danh sách loại hoa
     api
-      .get("/api/loaihoa") // Gọi API lấy danh sách loại hoa
+      .get("/api/loaihoa")
       .then((response) => {
-        setMenus(response.data); // Lưu dữ liệu vào state
+        setMenus(response.data);
       })
       .catch((error) => {
         console.error("Lỗi khi lấy danh sách loại hoa:", error);
       });
-  }, []);
 
-   // Gọi API khi component được render lần đầu
-   useEffect(() => {
-    // Lấy danh sách loại hoa (nếu cần)
-    // api.get("/api/loaihoa").then((response) => setMenus(response.data));
+    // Kiểm tra trạng thái hoạt động của người dùng
+    const token = localStorage.getItem("token");
+    if (token) {
+      api
+        .get("/api/admin/check-status", {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((response) => {
+          const { TenDangNhap, TrangThai } = response.data;
+          setUserName(TenDangNhap); // Lưu tên người dùng
+          setIsActive(TrangThai === 1); // Kiểm tra trạng thái hoạt động
+        })
+        .catch((error) => {
+          console.error("Lỗi khi kiểm tra trạng thái người dùng:", error);
+        });
+    }
 
     // Lấy số lượng sản phẩm trong giỏ hàng từ localStorage
     const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
-    const totalQuantity = cartItems.reduce((total, item) => total + (item.quantity || 1), 0);
+    const totalQuantity = cartItems.reduce(
+      (total, item) => total + (item.quantity || 1),
+      0
+    );
     setCartCount(totalQuantity);
-  });
+  }, []);
 
   // Tự động chuyển slide
   useEffect(() => {
@@ -47,6 +63,7 @@ const Header = () => {
     try {
       await api.post("/api/admin/logout"); // Gọi API đăng xuất
       localStorage.removeItem("token"); // Xóa token khỏi localStorage
+      setIsActive(false); // Tắt trạng thái hoạt động khi đăng xuất
       navigate("/login"); // Chuyển hướng đến trang đăng nhập
     } catch (error) {
       console.error("Lỗi khi đăng xuất:", error);
@@ -64,7 +81,7 @@ const Header = () => {
         className="top-header d-flex justify-content-between align-items-center px-3 py-2"
         style={{
           zIndex: "2000",
-          backgroundColor: "#F098BE"
+          backgroundColor: "#F098BE",
         }}
       >
         <div className="d-flex align-items-center">
@@ -151,11 +168,11 @@ const Header = () => {
                     {menus.map((menu) => (
                       <li key={menu.TenLoaiHoa}>
                         <button
-                        className="dropdown-item"
-                        onClick={() => handleCategoryClick(menu.MaLoaiHoa)}
-                      >
-                        {menu.TenLoaiHoa}
-                      </button>
+                          className="dropdown-item"
+                          onClick={() => handleCategoryClick(menu.MaLoaiHoa)}
+                        >
+                          {menu.TenLoaiHoa}
+                        </button>
                       </li>
                     ))}
                   </ul>
@@ -190,7 +207,16 @@ const Header = () => {
                     )}
                   </Link>
                 </li>
-                <li className="nav-item dropdown">
+                <li className="nav-item dropdown d-flex align-items-center">
+                  {/* Icon trạng thái */}
+                  <span
+                    className={`status-icon me-2 ${isActive ? "active" : "inactive"}`}
+                    title={isActive ? "Đang hoạt động" : "Ngoại tuyến"}
+                  >
+                    <i className="fa-solid fa-circle"></i>
+                  </span>
+                  
+                  {/* Hiển thị tài khoản */}
                   <Link
                     className="nav-link dropdown-toggle text-decoration-none"
                     to="#"
@@ -199,38 +225,29 @@ const Header = () => {
                     data-bs-toggle="dropdown"
                     aria-expanded="false"
                   >
-                    Tài Khoản
+                    {userName ? `Xin chào, ${userName}` : "Tài Khoản"}
                   </Link>
-                  <ul
-                    className="dropdown-menu"
-                    aria-labelledby="authDropdown"
-                  >
+
+                  {/* Dropdown Menu */}
+                  <ul className="dropdown-menu" aria-labelledby="authDropdown">
                     <li>
-                      <Link
-                        to="/login"
-                        className="dropdown-item text-decoration-none"
-                      >
+                      <Link to="/login" className="dropdown-item text-decoration-none">
                         Đăng Nhập
                       </Link>
                     </li>
                     <li>
-                      <Link
-                        to="/register"
-                        className="dropdown-item text-decoration-none"
-                      >
+                      <Link to="/register" className="dropdown-item text-decoration-none">
                         Đăng Ký
                       </Link>
                     </li>
                     <li>
-                      <button
-                        onClick={handleLogout}
-                        className="dropdown-item text-decoration-none"
-                      >
+                      <button onClick={handleLogout} className="dropdown-item text-decoration-none">
                         Đăng Xuất
                       </button>
                     </li>
                   </ul>
                 </li>
+
               </ul>
             </div>
           </div>
@@ -268,7 +285,7 @@ const Header = () => {
             <div
               className="mask"
               style={{
-                backgroundColor: "rgba(0, 0, 0, 0.6)",
+                backgroundColor: isActive ? "rgba(0, 255, 0, 0.6)" : "rgba(0, 0, 0, 0.6)",
               }}
             ></div>
           </div>
@@ -276,7 +293,7 @@ const Header = () => {
             <div
               className="mask"
               style={{
-                backgroundColor: "rgba(0, 0, 0, 0.3)",
+                backgroundColor: isActive ? "rgba(0, 255, 0, 0.3)" : "rgba(0, 0, 0, 0.3)",
               }}
             ></div>
           </div>
@@ -285,7 +302,9 @@ const Header = () => {
               className="mask"
               style={{
                 background:
-                  "linear-gradient(45deg, rgba(239, 254, 251, 0.7), rgba(91, 14, 214, 0.7) 100%)",
+                  isActive
+                    ? "linear-gradient(45deg, rgba(239, 254, 251, 0.7), rgba(91, 214, 14, 0.7) 100%)"
+                    : "linear-gradient(45deg, rgba(239, 254, 251, 0.7), rgba(91, 14, 214, 0.7) 100%)",
               }}
             ></div>
           </div>

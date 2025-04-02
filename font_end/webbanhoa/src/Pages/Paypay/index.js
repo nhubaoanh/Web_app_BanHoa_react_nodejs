@@ -14,11 +14,18 @@ const districts = {
 };
 
 const CheckoutPage = () => {
+
+  // lấy sản phẩm từ local ra gán vào
   const [cartItems, setCartItems] = useState([]);
+
   const [selectedProvince, setSelectedProvince] = useState("");
+
   const [selectedDistrict, setSelectedDistrict] = useState("");
+
   const [districtOptions, setDistrictOptions] = useState([]);
+
   const [customerId, setCustomerId] = useState(""); // Mã khách hàng
+
   const [totalAmount, setTotalAmount] = useState(0); // Tổng tiền
 
   const navigate = useNavigate(); // Khởi tạo useNavigate để chuyển hướng
@@ -58,7 +65,7 @@ const CheckoutPage = () => {
       MaKhachHang: 1,
       NgayDatHang: new Date().toISOString().replace('T', ' ').slice(0, 19), // Chuyển đổi sang định dạng YYYY-MM-DD HH:MM:SS
       TongTien: totalAmount,
-      TrangThai: "Chờ xử lý", // Trạng thái mặc định
+      TrangThai: "Cho xu ly", // Trạng thái mặc định
       listjson_chitiet: cartItems.map((item) => ({
         MaSanPham: item.MaSanPham,
         SoLuong: item.quantity || 1,

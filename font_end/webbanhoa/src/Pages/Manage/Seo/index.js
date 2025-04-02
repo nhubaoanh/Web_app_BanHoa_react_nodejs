@@ -8,7 +8,7 @@ const Seo = () => {
   const [searchTerm, setSearchTerm] = useState(''); // Từ khóa tìm kiếm
   const [action, setAction] = useState('add'); // Hành động hiện tại (add, edit, delete)
   const [currentPage, setCurrentPage] = useState(0); // Trang hiện tại
-  const itemsPerPage = 10; // Số lượng mục trên mỗi trang
+  const itemsPerPage = 10 ; // Số lượng mục trên mỗi trang
 
   // Lấy danh sách nhà cung cấp từ API
   useEffect(() => {

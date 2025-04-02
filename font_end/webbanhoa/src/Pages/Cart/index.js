@@ -2,9 +2,12 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 const Cart = () => {
+
   const [cartItems, setCartItems] = useState([]);
+
   const navigate = useNavigate();
   // Lấy thông tin sản phẩm từ localStorage
+  
   useEffect(() => {
     const items = JSON.parse(localStorage.getItem("cartItems")) || [];
     setCartItems(items);

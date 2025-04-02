@@ -23,7 +23,7 @@ const Login = () => {
       if (quyenHan === 'nhanvien') {
         navigate('/admin/Product'); // Chuyển hướng đến trang quản lý sản phẩm
       } else if (quyenHan === 'quanly') {
-        navigate('/admin/Custom'); // Chuyển hướng đến trang quản lý người dùng, khách hàng, nhà cung cấp
+        navigate('/admin/Dashboard'); // Chuyển hướng đến trang quản lý người dùng, khách hàng, nhà cung cấp
       }else if (quyenHan === 'khachhang'){
         navigate('/home')
       }

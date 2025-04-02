@@ -58,7 +58,7 @@ const Admin = () => {
                 <span>Analytics</span>
               </Link>
               <Link
-                to="#"
+                to="/admin/seo"
                 className={`list-group-item list-group-item-action py-2 ripple ${activeLink === '/admin/seo' ? 'active' : ''}`}
                 onClick={() => setActiveLink('/admin/seo')}
               >

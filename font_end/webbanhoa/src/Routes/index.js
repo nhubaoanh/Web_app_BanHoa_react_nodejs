@@ -12,6 +12,7 @@ import Nhacc from "../Pages/Manage/Nhacc";
 import Dashboard from "../Pages/Manage/Dashboard";
 import Orders from "../Pages/Manage/Order";
 import Seo from "../Pages/Manage/Seo";
+import Saff from "../Pages/Manage/Saff";
 
 
 export const routes = [
@@ -68,6 +69,9 @@ export const routes = [
       {
         path : "seo",
         element : <Seo/>
+      },{
+        path : "nhanvien",
+        element : <Saff/>
       }
     ],
   },

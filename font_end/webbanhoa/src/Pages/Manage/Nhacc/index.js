@@ -15,7 +15,6 @@ const Nhacc = () => {
   const itemsPerPage = 10;
 
   const offset = currentPage * itemsPerPage;
-  const currentItems = item.slice(offset, offset + itemsPerPage);
   const pageCount = Math.ceil(item.length / itemsPerPage);
 
   // Gọi API để lấy danh sách nhà cung cấp

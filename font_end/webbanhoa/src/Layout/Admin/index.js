@@ -50,12 +50,12 @@ const Admin = () => {
                 <span>Product</span>
               </Link>
               <Link
-                to="#"
-                className={`list-group-item list-group-item-action py-2 ripple ${activeLink === '/admin/analytics' ? 'active' : ''}`}
-                onClick={() => setActiveLink('/admin/analytics')}
+                to="/admin/nhanvien"
+                className={`list-group-item list-group-item-action py-2 ripple ${activeLink === '/admin/nhanvien' ? 'active' : ''}`}
+                onClick={() => setActiveLink('/admin/nhanvien')}
               >
                 <i className="fas fa-chart-line fa-fw me-3" />
-                <span>Analytics</span>
+                <span>Saff</span>
               </Link>
               <Link
                 to="/admin/seo"

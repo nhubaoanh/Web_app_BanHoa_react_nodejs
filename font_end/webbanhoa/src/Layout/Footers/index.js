@@ -11,12 +11,11 @@ const Footer = () => {
                 <div className="col-lg-4 col-md-12 mb-4 mb-md-0">
                   <h5 className="text-uppercase mb-4">About company</h5>
                   <p>
-                    At vero eos et accusamus et iusto odio dignissimos ducimus qui
-                    blanditiis praesentium voluptatum deleniti atque corrupti.
+                    This is page web seo flowwer of kiwi shop. Lorem ipsum dolor sit amet, consectetur adipisicing elit.
                   </p>
                   <p>
-                    Blanditiis praesentium voluptatum deleniti atque corrupti quos
-                    dolores et quas molestias.
+                    Company name: Kiwi shop <br />
+                    Address: 123 Nguyen Van Cu, Long Bien, Ha Noi <br />
                   </p>
                   <div className="mt-4">
                     {/* Facebook */}
@@ -69,25 +68,25 @@ const Footer = () => {
                       <span className="fa-li">
                         <i className="fas fa-home" />
                       </span>
-                      <span className="ms-2">New York, NY 10012, US</span>
+                      <span className="ms-2">Thanh tùng, thanh miện, hải dương - vn</span>
                     </li>
                     <li className="mb-3">
                       <span className="fa-li">
                         <i className="fas fa-envelope" />
                       </span>
-                      <span className="ms-2">info@example.com</span>
+                      <span className="ms-2">kiwishop2004.com</span>
                     </li>
                     <li className="mb-3">
                       <span className="fa-li">
                         <i className="fas fa-phone" />
                       </span>
-                      <span className="ms-2">+ 01 234 567 88</span>
+                      <span className="ms-2">+ 84 985848254</span>
                     </li>
                     <li className="mb-3">
                       <span className="fa-li">
                         <i className="fas fa-print" />
                       </span>
-                      <span className="ms-2">+ 01 234 567 89</span>
+                      <span className="ms-2">+ 84 966469703</span>
                     </li>
                   </ul>
                 </div>
@@ -122,9 +121,9 @@ const Footer = () => {
               className="text-center p-3"
               style={{ backgroundColor: "rgba(0, 0, 0, 0.2)" }}
             >
-              © 2020 Copyright:
+              © 2025 kiwi shop :
               <a className="text-white" href="https://mdbootstrap.com/">
-                MDBootstrap.com
+                nhubaoanh111@gmail.com
               </a>
             </div>
             {/* Copyright */}

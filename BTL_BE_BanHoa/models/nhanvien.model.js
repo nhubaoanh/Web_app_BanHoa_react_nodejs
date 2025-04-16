@@ -31,6 +31,15 @@ nhanvien.insert = (nhanvien, callback) => {
   });
 };
 
+nhanvien.createSaffOfAdmin = (nhanvien, callback) =>{
+  const sqlSatring = "CALL sp_addSaffOfAdmin(?, ?, ?, ?)";
+  const { HoTen, SoDienThoai, Email, MatKhau } = nhanvien;
+  db.query(sqlSatring, [HoTen, SoDienThoai, Email, MatKhau], (err, result) => {
+    if (err) return callback(err);
+    callback(result);
+  });
+};
+
 nhanvien.update = (nhanvien, id, callback) => {
   const sqlString = "UPDATE nhanvien SET ? WHERE id = ?";
   db.query(sqlString, [nhanvien, id], (err, res) => {

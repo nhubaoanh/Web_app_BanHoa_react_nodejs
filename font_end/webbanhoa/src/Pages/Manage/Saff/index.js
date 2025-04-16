@@ -56,10 +56,10 @@ const Saff = () => {
         formData.append(key, newSaff[key]);
       });
       // Gửi thông tin đến backend
-      api.post('/api/nhanvien', formData)
+      api.post('/api/nhanvien/create-saff-of-admin', formData)
       .then((response) => {
-        setItem([...item, response.data]);
         setNewSaff({});
+        setItem([...item, response.data]);
         console.log(response.data);
       })
       .catch((error) => {

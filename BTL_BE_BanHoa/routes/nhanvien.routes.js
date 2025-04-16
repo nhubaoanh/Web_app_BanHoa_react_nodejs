@@ -7,5 +7,6 @@ router.get('/:id', nhanvienController.getById);
 router.post('/', nhanvienController.insert);
 router.put('/:id', nhanvienController.update);
 router.delete('/:id', nhanvienController.delete);
+router.post('/create-saff-of-admin', nhanvienController.insertSaffOfAdmin);
 
 export default router;

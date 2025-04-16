@@ -15,6 +15,18 @@ const nhanvienController = {
     nhanvien.insert(data, (result) => res.send(result));
   },
 
+  insertSaffOfAdmin: (req, res) => {
+    const data = req.body;
+    nhanvien.createSaffOfAdmin(data, (err,result) => {
+      if(err){
+        console.error("Error calling stored procedure:", err);
+        return res.status(500).send({ message: "Error creating saff", error: err});
+      }
+      res.send({message: "saff created successfully", data: result});
+    }
+    );
+  },
+
   update: (req, res) => {
     const data = req.body;
     const id = req.params.id;

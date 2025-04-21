@@ -76,51 +76,6 @@ const Header = () => {
 
   return (
     <div>
-      {/* Phần header trên cùng */}
-      <div
-        className="top-header d-flex justify-content-between align-items-center px-3 py-2"
-        style={{
-          zIndex: "2000",
-          backgroundColor: "#F098BE",
-        }}
-      >
-        <div className="d-flex align-items-center">
-          <Link to="#" className="me-3 text-white text-decoration-none">
-            Kênh Người Bán
-          </Link>
-          <Link to="#" className="me-3 text-white text-decoration-none">
-            Trở thành Người bán Shopee
-          </Link>
-          <Link to="#" className="me-3 text-white text-decoration-none">
-            Tải ứng dụng
-          </Link>
-          <span className="me-3 text-white">Kết nối:</span>
-          <Link
-            to="https://www.facebook.com"
-            className="me-2 text-white text-decoration-none"
-          >
-            <i className="fab fa-facebook-f"></i>
-          </Link>
-          <Link
-            to="https://www.instagram.com"
-            className="text-white text-decoration-none"
-          >
-            <i className="fab fa-instagram"></i>
-          </Link>
-        </div>
-        <div className="d-flex align-items-center">
-          <Link to="#" className="me-3 text-white text-decoration-none">
-            <i className="fa-solid fa-bell"></i> Thông Báo
-          </Link>
-          <Link to="#" className="me-3 text-white text-decoration-none">
-            <i className="fa-solid fa-circle-question"></i> Hỗ Trợ
-          </Link>
-          <Link to="#" className="me-3 text-white text-decoration-none">
-            Tiếng Việt <i className="fa-solid fa-chevron-down"></i>
-          </Link>
-        </div>
-      </div>
-
       {/* Phần header chính */}
       <header>
         <nav
@@ -178,18 +133,6 @@ const Header = () => {
                   </ul>
                 </li>
               </ul>
-              <form className="d-flex flex-grow-1">
-                <input
-                  className="form-control me-2 flex-grow-1"
-                  type="search"
-                  placeholder="Search"
-                  aria-label="Search"
-                  style={{ flex: "2" }} // Chiếm 2 phần
-                />
-                <button className="btn btn-outline-light" type="submit">
-                  <i className="fa-solid fa-magnifying-glass"></i>
-                </button>
-              </form>
               <ul className="navbar-nav list-inline ms-3 d-flex align-items-center">
                 <li className="nav-item me-3">
                   <Link

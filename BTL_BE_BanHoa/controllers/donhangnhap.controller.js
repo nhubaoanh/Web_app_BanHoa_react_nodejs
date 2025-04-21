@@ -24,6 +24,19 @@ const donhangnhapController = {
   delete: (req, res) => {
     const id = req.params.id;
     donhangnhap.delete(id, (result) => res.send(result));
+  },
+  insertWithDetails: (req, res) => {
+    const data = req.body;
+
+    donhangnhap.createAddOrderWithDetails(data, (err, result) => {
+      if(err){
+        console.error("Error calling stored procedure:", err);
+        return res.status(500).send({ message: "Error creating order", error: err});
+
+      }
+      res.send({message: "Order created successfully", data: result});
+    });
   }
+  
 };
 export default donhangnhapController

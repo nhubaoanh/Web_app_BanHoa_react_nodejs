@@ -46,4 +46,29 @@ donhangnhap.delete = (id, callback) => {
   });
 };
 
+donhangnhap.createAddOrderWithDetails = (orderData, callback) =>{
+  let {MaNhaCungCap, MaNhanVien, NgayNhap, TongTien, TrangThai, listjson_chitiet } = orderData;
+
+  // Chuyển MaKhachHang thành số nguyên (int)
+  MaNhaCungCap = parseInt(MaNhaCungCap);
+  if (isNaN(MaNhaCungCap)) {
+    return callback(new Error('Mã nhà cung cấp không hợp lệ'));
+  }
+
+  // Chuyển TongTien thành số thập phân (decimal)
+  TongTien = parseFloat(TongTien);
+  if (isNaN(TongTien)) {
+    return callback(new Error('Tổng tiền không hợp lệ'));
+  }
+  const sqlString = `CALL sp_donnhap_create(?, ?, ?, ?, ?, ?)`;
+  db.query(
+    sqlString,
+    [MaNhaCungCap, MaNhanVien, NgayNhap, TongTien, TrangThai, JSON.stringify(listjson_chitiet)],
+    (err, result) => {
+      if(err) return callback(err);
+      callback(null, result);
+    }
+  )
+};
+
 export default donhangnhap;

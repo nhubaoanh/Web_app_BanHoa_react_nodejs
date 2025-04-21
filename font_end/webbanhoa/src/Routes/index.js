@@ -13,6 +13,7 @@ import Dashboard from "../Pages/Manage/Dashboard";
 import Orders from "../Pages/Manage/Order";
 import Seo from "../Pages/Manage/Seo";
 import Saff from "../Pages/Manage/Saff";
+import OrderDetail from "../Pages/Manage/OrderDetail";
 
 
 export const routes = [
@@ -72,6 +73,9 @@ export const routes = [
       },{
         path : "nhanvien",
         element : <Saff/>
+      },{
+        path : "donhangnhap",
+        element : <OrderDetail/>
       }
     ],
   },

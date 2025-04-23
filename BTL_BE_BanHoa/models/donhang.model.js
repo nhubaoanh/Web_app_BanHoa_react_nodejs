@@ -93,6 +93,14 @@ donhang.createOrderWithDetails = (orderData, callback) => {
   );
 };
 
+donhang.getTopSanphamBanChay = (SoLuong, callback) => {
+  const sqlString = `CALL TopSanPhamBanChay(?)`;
+  db.query(sqlString, [SoLuong], (err, result) => {
+    if (err) return callback(err);
+    callback(null,result[0]);
+  });
+};
+
 
 
 export default donhang;

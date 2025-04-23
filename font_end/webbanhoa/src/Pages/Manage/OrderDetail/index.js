@@ -41,7 +41,7 @@ const OrderDetail = () => {
       ...newOrder,
       MaNhaCungCap: parseInt(newOrder.MaNhaCungCap, 10),
       TongTien: parseFloat(newOrder.TongTien).toFixed(2),
-      listjson_chitiet: JSON.stringify(newOrder.listjson_chitiet),
+      listjson_chitiet: newOrder.listjson_chitiet,
     };
 
     api.post('/api/donhangnhap/create-with-detailss', orderData)

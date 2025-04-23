@@ -206,7 +206,7 @@ const Product = () => {
         <table className="table">
           <thead>
             <tr>
-              <th>Id</th>  
+              {/* <th>Id</th>   */}
               <th>Name</th>
               <th>Id Type Flower</th>
               <th>Price</th>
@@ -219,7 +219,7 @@ const Product = () => {
           <tbody>
             {filteredItems.slice(offset, offset + itemsPerPage).map((item) => (
               <tr key={item.MaSanPham}>
-                <td>{item.MaSanPham}</td>
+                {/* <td>{item.MaSanPham}</td> */}
                 <td>{item.TenHoa}</td>
                 <td>{item.MaLoaiHoa}</td>
                 <td>{item.GiaBan}₫</td>

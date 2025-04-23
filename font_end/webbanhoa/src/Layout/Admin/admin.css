@@ -99,3 +99,9 @@ body {
   color: white !important;
   font-weight: bold;
 }
+.nav-too{
+  padding: 30px;
+  position: relative;
+  top: 40px;
+  right: 0;
+}

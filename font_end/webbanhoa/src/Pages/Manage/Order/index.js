@@ -43,7 +43,7 @@ const Orders = () => {
     // Chuyển listjson_chitiet thành chuỗi JSON
     const orderData = {
       ...newOrder,
-      listjson_chitiet: JSON.stringify(newOrder.listjson_chitiet),
+      listjson_chitiet: (newOrder.listjson_chitiet),
     };
   
     api.post('/api/donhang/create-with-details', orderData)

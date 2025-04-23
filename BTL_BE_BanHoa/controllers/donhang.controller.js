@@ -37,5 +37,18 @@ const donhangController = {
       res.send({message: "Order created successfully", data: result});
     });
   }
+  ,
+  getTopSanPhamBanChay: (req, res) => {
+    const soLuong = req.query.soluong || 5;
+
+    donhang.getTopSanphamBanChay(soLuong, (err, result) => {
+      if (err) {
+        console.error("Error fetching top selling products:", err);
+        return res.status(500).send({ message: "Error fetching top selling products", error: err });
+      }
+      console.log("Kết quả trả về từ stored procedure:", result); //
+      res.json(result); // 
+    });
+  }
 };
 export default donhangController

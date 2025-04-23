@@ -34,14 +34,6 @@ const Admin = () => {
                 <span>Main dashboard</span>
               </Link>
               <Link
-                to="#"
-                className={`list-group-item list-group-item-action py-2 ripple ${activeLink === '/admin/traffic' ? 'active' : ''}`}
-                onClick={() => setActiveLink('/admin/traffic')}
-              >
-                <i className="fas fa-chart-area fa-fw me-3" />
-                <span>Website traffic</span>
-              </Link>
-              <Link
                 to="/admin/product"
                 className={`list-group-item list-group-item-action py-2 ripple ${activeLink === '/admin/product' ? 'active' : ''}`}
                 onClick={() => setActiveLink('/admin/product')}
@@ -192,7 +184,7 @@ const Admin = () => {
                     loading="lazy"
                   />
                 </Link>
-                <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
+                <ul className="nav-too dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
                   <li>
                     <button className="dropdown-item" to="#" onClick={() => handleLogout()}>
                       <i className="fa-solid fa-right-from-bracket"></i> Logout

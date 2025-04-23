@@ -3,6 +3,7 @@ var router = express.Router();
 import donhangController from '../controllers/donhang.controller';
 
 router.get('/', donhangController.getAll);
+router.get("/top-sanphamban-chay", donhangController.getTopSanPhamBanChay);
 router.get('/:id', donhangController.getById);
 router.post('/', donhangController.insert);
 router.put('/:id', donhangController.update);

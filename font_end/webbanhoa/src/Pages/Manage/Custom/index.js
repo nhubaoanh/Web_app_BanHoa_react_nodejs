@@ -126,7 +126,7 @@ const Custom = () => {
         <table className="table">
           <thead>
             <tr>
-              <th>Id</th>
+              {/* <th>Id</th> */}
               <th>Name</th>
               <th>Number Phone</th>
               <th>Email</th>
@@ -139,7 +139,7 @@ const Custom = () => {
             {
               filteredItems.map((item) => (
                 <tr key={item.MaKhachHang}>
-                  <td>{item.MaKhachHang}</td>
+                  {/* <td>{item.MaKhachHang}</td> */}
                   <td>{item.HoTen}</td>
                   <td>{item.SoDienThoai}</td>
                   <td>{item.Email}</td>

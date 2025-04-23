@@ -90,6 +90,12 @@ const Header = () => {
               className="navbar-brand nav-link text-decoration-none"
               to="/home"
             >
+              <i className="fa-solid fa-house"></i>
+            </Link>
+            <Link
+              className="navbar-brand nav-link text-decoration-none"
+              to="/home"
+            >
               <strong>Kiwi</strong>
             </Link>
             <button
@@ -151,13 +157,13 @@ const Header = () => {
                   </Link>
                 </li>
                 <li className="nav-item dropdown d-flex align-items-center">
-                  {/* Icon trạng thái */}
+                  {/* Icon trạng thái
                   <span
                     className={`status-icon me-2 ${isActive ? "active" : "inactive"}`}
                     title={isActive ? "Đang hoạt động" : "Ngoại tuyến"}
                   >
                     <i className="fa-solid fa-circle"></i>
-                  </span>
+                  </span> */}
                   
                   {/* Hiển thị tài khoản */}
                   <Link
@@ -172,7 +178,7 @@ const Header = () => {
                   </Link>
 
                   {/* Dropdown Menu */}
-                  <ul className="dropdown-menu" aria-labelledby="authDropdown">
+                  <ul className="dropdown-menu ml-3" aria-labelledby="authDropdown">
                     <li>
                       <Link to="/login" className="dropdown-item text-decoration-none">
                         Đăng Nhập
@@ -188,6 +194,15 @@ const Header = () => {
                         Đăng Xuất
                       </button>
                     </li>
+                  </ul>
+
+                  <ul>
+                    <Link
+                      className="nav-link text-decoration-none"
+                      to="/home"
+                    >
+                      <i className="fa-solid fa-comment"></i>
+                    </Link>
                   </ul>
                 </li>
 

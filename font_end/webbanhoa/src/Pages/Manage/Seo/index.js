@@ -115,7 +115,7 @@ const Seo = () => {
           setNewItem({});
         }}
       >
-        Thêm nhà cung cấp
+        Thêm khuyến mãi
       </button>
       <table className="table">
         <thead>

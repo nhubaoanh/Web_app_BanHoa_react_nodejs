@@ -11,6 +11,8 @@ const Nhacc = () => {
   const [action, setAction] = useState('add');
   const [searchTerm, setSearchTerm] = useState('');
 
+
+
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 10;
 
@@ -122,7 +124,8 @@ const Nhacc = () => {
         <table className="table">
           <thead>
             <tr>
-              <th>Id</th>
+              <th>STT</th>
+              {/* <th>Id</th> */}
               <th>Name</th>
               <th>Number Phone</th>
               <th>Email</th>
@@ -133,9 +136,10 @@ const Nhacc = () => {
           </thead>
           <tbody>
             {
-              filteredItem.slice(offset, offset + itemsPerPage).map((item) => (
+              filteredItem.slice(offset, offset + itemsPerPage).map((item, index) => (
                 <tr key={item.MaNhaCungCap}>
-                  <td>{item.MaNhaCungCap}</td>
+                  <td>{offset + index + 1}</td>
+                  {/* <td>{item.MaNhaCungCap}</td> */}
                   <td>{item.TenNhaCungCap}</td>
                   <td>{item.SoDienThoai}</td>
                   <td>{item.Email}</td>

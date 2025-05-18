@@ -120,7 +120,7 @@ const Cart = () => {
                       </div>
                       <div className="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
                         <h5 className="mb-0">
-                          ${(item.GiaBan * (item.quantity || 1)).toFixed(2)}
+                          {(item.GiaBan * (item.quantity || 1)).toLocaleString('en-US') + "đ"}
                         </h5>
                       </div>
                       <div className="col-md-1 col-lg-1 col-xl-1 text-end">
@@ -140,7 +140,10 @@ const Cart = () => {
               {/* Hiển thị tổng số tiền và nút thanh toán */}
               <div className="card text-end">
                 <div className="card-body">
-                  <h5 className="mb-0">Total Amount: ${totalAmount.toFixed(2)}</h5>
+                <h5 className="mb-0">
+                  Tổng tiền: {totalAmount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}
+                </h5>
+
                   <button className="btn btn-primary mt-3">
                     <Link className="nav-link" to="/pay">
                       Proceed to Checkout

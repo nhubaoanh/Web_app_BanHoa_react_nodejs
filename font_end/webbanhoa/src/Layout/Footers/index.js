@@ -9,13 +9,13 @@ const Footer = () => {
               <div className="row mt-4">
                 {/*Grid column*/}
                 <div className="col-lg-4 col-md-12 mb-4 mb-md-0">
-                  <h5 className="text-uppercase mb-4">About company</h5>
+                  <h5 className="text-uppercase mb-4">Tổng quan</h5>
                   <p>
-                    This is page web seo flowwer of kiwi shop. Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                      Đây là trang web bán hoa của kiwi shop, nơi cung cấp các sản phẩm hoa tươi chất lượng cao và dịch vụ giao hàng nhanh chóng. Chúng tôi cam kết mang đến cho khách hàng những trải nghiệm tốt nhất với các sản phẩm hoa đa dạng và dịch vụ tận tâm.
                   </p>
                   <p>
-                    Company name: Kiwi shop <br />
-                    Address: 123 Nguyen Van Cu, Long Bien, Ha Noi <br />
+                    Công ty : Kiwi shop <br />
+                    Địa chỉ : 123 Nguyen Van Cu, Long Bien, Ha Noi <br />
                   </p>
                   <div className="mt-4">
                     {/* Facebook */}
@@ -40,7 +40,7 @@ const Footer = () => {
                 {/*Grid column*/}
                 {/*Grid column*/}
                 <div className="col-lg-4 col-md-6 mb-4 mb-md-0">
-                  <h5 className="text-uppercase mb-4 pb-1">Search something</h5>
+                  <h5 className="text-uppercase mb-4 pb-1">Tìm kiếm bất kì thông tin nào </h5>
                   <div className="form-outline form-white mb-4">
                     <input
                       type="text"
@@ -93,7 +93,7 @@ const Footer = () => {
                 {/*Grid column*/}
                 {/*Grid column*/}
                 <div className="col-lg-4 col-md-6 mb-4 mb-md-0">
-                  <h5 className="text-uppercase mb-4">Opening hours</h5>
+                  <h5 className="text-uppercase mb-4">Mở cửa</h5>
                   <table className="table text-center text-white">
                     <tbody className="font-weight-normal">
                       <tr>

@@ -14,6 +14,9 @@ import Orders from "../Pages/Manage/Order";
 import Seo from "../Pages/Manage/Seo";
 import Saff from "../Pages/Manage/Saff";
 import OrderDetail from "../Pages/Manage/OrderDetail";
+import DetailProduct from "../Pages/DetailProduct";
+import XacNhanDon from "../Pages/Manage/XacNhanDon";
+import QuanLyDonHang from "../Pages/Manage/QuanLyDonHang";
 
 
 export const routes = [
@@ -39,6 +42,9 @@ export const routes = [
       {
         path : "pay",
         element : <Paypay/>
+      },{
+        path : "product/:MaSanPham",
+        element : <DetailProduct/>
       }
       
     ],
@@ -76,6 +82,12 @@ export const routes = [
       },{
         path : "donhangnhap",
         element : <OrderDetail/>
+      },{
+        path : "xannhandon",
+        element : <XacNhanDon/>
+      },{
+        path : "quanlydonhang",
+        element : <QuanLyDonHang/>
       }
     ],
   },

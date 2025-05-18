@@ -108,7 +108,7 @@ const Home = () => {
                     <p>{product.category}</p>
                     <h6 className="mb-2">
                       <strong className="ms-2 text-danger">
-                        ${product.GiaBan}
+                        {Number(product.GiaBan).toLocaleString('en-US') + ' VNĐ'}
                       </strong>
                     </h6>
                     <div className="row d-flex justify-content-center ">
@@ -125,7 +125,7 @@ const Home = () => {
                         onClick={() => handlePayNow(product)}
                       >
                         <Link className="nav-link" to="/Cart">
-                          Pay Now
+                          Thanh toán ngay
                         </Link>
                       </button>
                     </div>

@@ -20,21 +20,48 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
-      alert('Passwords do not match');
+      alert('Mật khẩu không khớp');
       return;
     }
 
     try {
-      const response = await api.post('/api/admin/', {
+      // Thêm vào bảng admin
+      const adminResponse = await api.post('/api/admin/', {
         TenDangNhap: formData.name,
         Email: formData.email,
         MatKhau: formData.password,
+        HoTen: formData.name,
+        QuyenHan: 'khachhang',
+        TrangThai: 0
       });
-      alert('User registered successfully');
-      console.log(response.data);
+
+      console.log('Admin response:', adminResponse.data);
+
+      if (!adminResponse.data.MaAdmin) {
+        throw new Error('Không nhận được MaAdmin từ server');
+      }
+
+      // Thêm vào bảng khachhang với MaAdmin từ response
+      const khachHangResponse = await api.post('/api/khachhang/', {
+        HoTen: formData.name,
+        Email: formData.email,
+        SoDienThoai: '',
+        DiaChi: '',
+        MaAdmin: adminResponse.data.MaAdmin // Sử dụng MaAdmin từ response
+      });
+
+      console.log('KhachHang response:', khachHangResponse.data);
+
+      // Lưu thông tin vào localStorage
+      localStorage.setItem('MaAdmin', adminResponse.data.MaAdmin);
+      localStorage.setItem('MaKhachHang', khachHangResponse.data.MaKhachHang);
+
+      alert('Đăng ký thành công!');
+      // Chuyển hướng đến trang đăng nhập
+      window.location.href = '/login';
     } catch (error) {
-      console.error('Error registering user:', error);
-      alert('Error registering user');
+      console.error('Lỗi khi đăng ký:', error);
+      alert('Đăng ký thất bại: ' + (error.response?.data?.message || error.message));
     }
   };
 

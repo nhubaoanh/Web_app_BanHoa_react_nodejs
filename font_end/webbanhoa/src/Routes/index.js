@@ -45,6 +45,9 @@ export const routes = [
       },{
         path : "product/:MaSanPham",
         element : <DetailProduct/>
+      },{
+        path : "xacnhandon",
+        element : <XacNhanDon/>
       }
       
     ],
@@ -82,9 +85,6 @@ export const routes = [
       },{
         path : "donhangnhap",
         element : <OrderDetail/>
-      },{
-        path : "xannhandon",
-        element : <XacNhanDon/>
       },{
         path : "quanlydonhang",
         element : <QuanLyDonHang/>

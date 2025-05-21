@@ -64,19 +64,29 @@ const Orders = () => {
 
   // Sửa đơn hàng
   const handleEditOrder = () => {
-    api.put(`/api/donhang/${currentOrder.MaDonHang}`, newOrder)
+    // Chuẩn bị dữ liệu đơn hàng
+    const orderData = {
+      ...newOrder,
+      MaKhachHang: parseInt(newOrder.MaKhachHang),
+      TongTien: parseFloat(newOrder.TongTien),
+      listjson_chitiet: newOrder.listjson_chitiet
+    };
+
+    console.log('Dữ liệu sửa đơn hàng:', orderData);
+
+    api.put(`/api/donhang/${currentOrder.MaDonHang}`, orderData)
       .then((response) => {
         alert('Sửa đơn hàng thành công!');
+        // Cập nhật lại danh sách đơn hàng
         const updatedItems = items.map((item) =>
-          item.MaDonHang === response.data.MaDonHang ? response.data : item
+          item.MaDonHang === currentOrder.MaDonHang ? { ...item, ...orderData } : item
         );
-        setItems(items);
         setItems(updatedItems);
         setShowModal(false);
       })
       .catch((error) => {
         console.error('Lỗi khi sửa đơn hàng:', error);
-        alert('Sửa đơn hàng thất bại!');
+        alert('Sửa đơn hàng thất bại: ' + (error.response?.data?.message || error.message));
       });
   };
 

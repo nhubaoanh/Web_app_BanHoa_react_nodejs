@@ -31,10 +31,52 @@ donhang.insert = (donhang, callback) => {
 };
 
 donhang.update = (donhang, id, callback) => {
+  // Validate và chuyển đổi dữ liệu
+  let { MaKhachHang, TongTien, TrangThai, NgayDatHang } = donhang;
+
+  // Chuyển MaKhachHang thành số nguyên
+  MaKhachHang = parseInt(MaKhachHang);
+  if (isNaN(MaKhachHang)) {
+    return callback(new Error('Mã khách hàng không hợp lệ'));
+  }
+
+  // Chuyển TongTien thành số thập phân
+  TongTien = parseFloat(TongTien);
+  if (isNaN(TongTien)) {
+    return callback(new Error('Tổng tiền không hợp lệ'));
+  }
+
+  // Xử lý định dạng ngày tháng
+  let formattedDate = NgayDatHang;
+  if (NgayDatHang) {
+    try {
+      const date = new Date(NgayDatHang);
+      formattedDate = date.toISOString().slice(0, 19).replace('T', ' ');
+    } catch (error) {
+      return callback(new Error('Định dạng ngày tháng không hợp lệ'));
+    }
+  }
+
+  // Chuẩn bị dữ liệu cập nhật
+  const updateData = {
+    MaKhachHang,
+    TongTien,
+    TrangThai,
+    NgayDatHang: formattedDate
+  };
+
+  console.log('Dữ liệu cập nhật:', updateData);
+
   const sqlString = "UPDATE donhang SET ? WHERE MaDonHang = ?";
-  db.query(sqlString, [donhang, id], (err, res) => {
-    if (err) return callback(err);
-    callback("Cập nhật thành công");
+  db.query(sqlString, [updateData, id], (err, res) => {
+    if (err) {
+      console.error('Lỗi khi cập nhật đơn hàng:', err);
+      return callback(err);
+    }
+    if (res.affectedRows === 0) {
+      return callback(new Error('Không tìm thấy đơn hàng để cập nhật'));
+    }
+    callback(null, { message: "Cập nhật thành công", affectedRows: res.affectedRows });
   });
 };
 

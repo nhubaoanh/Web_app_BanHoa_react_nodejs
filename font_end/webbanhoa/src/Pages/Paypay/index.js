@@ -30,6 +30,24 @@ const CheckoutPage = () => {
 
   const navigate = useNavigate(); // Khởi tạo useNavigate để chuyển hướng
 
+  const [formData, setFormData] = useState({
+    email: '',
+    hoTen: '',
+    soDienThoai: '',
+    diaChi: '',
+    tinhThanh: '',
+    quanHuyen: '',
+    ghiChu: ''
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
   // Lấy thông tin từ localStorage
   useEffect(() => {
     const items = JSON.parse(localStorage.getItem("cartItems")) || [];
@@ -40,32 +58,51 @@ const CheckoutPage = () => {
       return total + item.GiaBan * (item.quantity || 1);
     }, 0);
     setTotalAmount(total);
-  }, []);
 
-  // Gọi API để lấy mã khách hàng
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      api
-        .get("/api/admin/check-status", {
-          headers: { Authorization: `Bearer ${token}` },
+    // Lấy mã khách hàng từ localStorage
+    const maKhachHang = localStorage.getItem("MaAdmin");
+    if (maKhachHang) {
+      setCustomerId(maKhachHang);
+    } else {
+      // Nếu chưa có MaKhachHang, gọi API để lấy
+      const token = localStorage.getItem("token");
+      if (token) {
+        api.get("/api/admin/check-status", {
+          headers: { Authorization: `Bearer ${token}` }
         })
-        .then((response) => {
-          const { MaAdmin } = response.data;
-          setCustomerId(MaAdmin); // Lưu mã khách hàng
+        .then(response => {
+          const { MaKhachHang } = response.data;
+          setCustomerId(MaKhachHang);
+          localStorage.setItem("MaKhachHang", MaKhachHang);
         })
-        .catch((error) => {
+        .catch(error => {
           console.error("Lỗi khi lấy mã khách hàng:", error);
         });
+      }
     }
   }, []);
 
   const handleAddOrder = () => {
+    if (!customerId) {
+      alert("Vui lòng đăng nhập để đặt hàng!");
+      navigate("/login");
+      return;
+    }
+
+    // Kiểm tra thông tin bắt buộc
+    if (!formData.hoTen || !formData.soDienThoai || !formData.diaChi) {
+      alert("Vui lòng điền đầy đủ thông tin nhận hàng!");
+      return;
+    }
+
     const orderData = {
-      MaKhachHang: 1,
-      NgayDatHang: new Date().toISOString().replace('T', ' ').slice(0, 19), // Chuyển đổi sang định dạng YYYY-MM-DD HH:MM:SS
+      MaKhachHang: customerId,
+      NgayDatHang: new Date().toISOString().replace('T', ' ').slice(0, 19),
       TongTien: totalAmount,
-      TrangThai: "Cho xu ly", // Trạng thái mặc định
+      TrangThai: "Cho xu ly",
+      TenKhachHang: formData.hoTen,
+      SoDienThoai: formData.soDienThoai,
+      DiaChi: `${formData.diaChi}, ${selectedDistrict}, ${selectedProvince}`,
       listjson_chitiet: cartItems.map((item) => ({
         MaSanPham: item.MaSanPham,
         SoLuong: item.quantity || 1,
@@ -74,13 +111,21 @@ const CheckoutPage = () => {
       })),
     };
 
+    // Lưu thông tin đơn hàng vào localStorage
+    localStorage.setItem('lastOrderInfo', JSON.stringify({
+      TenKhachHang: formData.hoTen,
+      SoDienThoai: formData.soDienThoai,
+      DiaChi: `${formData.diaChi}, ${selectedDistrict}, ${selectedProvince}`,
+      GhiChu: formData.ghiChu
+    }));
+
     api
       .post("/api/donhang/create-with-details", orderData)
       .then((response) => {
         alert("Đặt hàng thành công!");
         console.log("Đơn hàng đã được thêm:", response.data);
         localStorage.removeItem("cartItems"); // Xóa giỏ hàng sau khi đặt hàng thành công
-        navigate("/"); // Chuyển hướng về trang chủ
+        navigate("/xacnhandon"); // Chuyển hướng đến trang xác nhận đơn
       })
       .catch((error) => {
         console.error("Lỗi khi thêm đơn hàng:", error);
@@ -105,16 +150,47 @@ const CheckoutPage = () => {
             <h4>Thông tin nhận hàng</h4>
             <form>
               <div className="checkout-form-group">
-                <input type="email" placeholder="Email" className="checkout-form-control" />
+                <input 
+                  type="email" 
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  placeholder="Email" 
+                  className="checkout-form-control" 
+                />
               </div>
               <div className="checkout-form-group">
-                <input type="text" placeholder="Họ và tên" className="checkout-form-control" />
+                <input 
+                  type="text" 
+                  name="hoTen"
+                  value={formData.hoTen}
+                  onChange={handleInputChange}
+                  placeholder="Họ và tên" 
+                  className="checkout-form-control" 
+                  required
+                />
               </div>
               <div className="checkout-form-group">
-                <input type="text" placeholder="Số điện thoại" className="checkout-form-control" />
+                <input 
+                  type="text" 
+                  name="soDienThoai"
+                  value={formData.soDienThoai}
+                  onChange={handleInputChange}
+                  placeholder="Số điện thoại" 
+                  className="checkout-form-control" 
+                  required
+                />
               </div>
               <div className="checkout-form-group">
-                <input type="text" placeholder="Địa chỉ" className="checkout-form-control" />
+                <input 
+                  type="text" 
+                  name="diaChi"
+                  value={formData.diaChi}
+                  onChange={handleInputChange}
+                  placeholder="Địa chỉ" 
+                  className="checkout-form-control" 
+                  required
+                />
               </div>
               <div className="checkout-row">
                 <div className="checkout-col">
@@ -122,6 +198,7 @@ const CheckoutPage = () => {
                     className="checkout-form-control"
                     value={selectedProvince}
                     onChange={(e) => setSelectedProvince(e.target.value)}
+                    required
                   >
                     <option value="">Chọn tỉnh thành</option>
                     {provinces.map((province, index) => (
@@ -134,6 +211,7 @@ const CheckoutPage = () => {
                     className="checkout-form-control"
                     value={selectedDistrict}
                     onChange={(e) => setSelectedDistrict(e.target.value)}
+                    required
                   >
                     <option value="">Chọn quận huyện</option>
                     {districtOptions.map((district, index) => (
@@ -143,7 +221,14 @@ const CheckoutPage = () => {
                 </div>
               </div>
               <div className="checkout-form-group mt-3">
-                <textarea placeholder="Ghi chú" rows={2} className="checkout-form-control"></textarea>
+                <textarea 
+                  name="ghiChu"
+                  value={formData.ghiChu}
+                  onChange={handleInputChange}
+                  placeholder="Ghi chú" 
+                  rows={2} 
+                  className="checkout-form-control"
+                ></textarea>
               </div>
             </form>
           </div>

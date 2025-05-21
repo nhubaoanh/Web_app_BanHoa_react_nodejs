@@ -190,6 +190,11 @@ const Header = () => {
                       </Link>
                     </li>
                     <li>
+                      <Link to="/xacnhandon" className="dropdown-item text-decoration-none">
+                        đơn mua
+                      </Link>
+                    </li>
+                    <li>
                       <button onClick={handleLogout} className="dropdown-item text-decoration-none">
                         Đăng Xuất
                       </button>

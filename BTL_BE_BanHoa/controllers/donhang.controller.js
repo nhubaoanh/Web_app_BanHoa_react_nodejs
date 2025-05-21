@@ -18,7 +18,23 @@ const donhangController = {
   update: (req, res) => {
     const data = req.body;
     const id = req.params.id;
-    donhang.update(data, id, (result) => res.send(result));
+    
+    console.log('Dữ liệu cập nhật từ request:', data);
+    console.log('ID đơn hàng cần cập nhật:', id);
+
+    donhang.update(data, id, (err, result) => {
+      if (err) {
+        console.error('Lỗi khi cập nhật đơn hàng:', err);
+        return res.status(400).json({ 
+          message: "Lỗi khi cập nhật đơn hàng", 
+          error: err.message 
+        });
+      }
+      res.json({ 
+        message: "Cập nhật đơn hàng thành công", 
+        data: result 
+      });
+    });
   },
 
   delete: (req, res) => {

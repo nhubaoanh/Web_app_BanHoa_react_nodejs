@@ -18,28 +18,103 @@ const OrderConfirmation = () => {
     { title: "Giao thành công", icon: "📦", status: "Giao thành công" },
   ]
 
-  // Lấy danh sách đơn hàng
+  // Hàm xác định trạng thái hiện tại của đơn hàng
+  const getCurrentStep = (status) => {
+    switch (status) {
+      case "Chờ xác nhận":
+        return 0;
+      case "Đã xác nhận":
+        return 1;
+      case "Đang vận chuyển":
+        return 2;
+      case "Giao thành công":
+        return 3;
+      default:
+        return 0;
+    }
+  };
+
+  // Hàm xác định màu sắc cho trạng thái
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "Giao thành công":
+        return "success";
+      case "Đang vận chuyển":
+        return "primary";
+      case "Đã xác nhận":
+        return "info";
+      case "Chờ xác nhận":
+        return "warning";
+      default:
+        return "secondary";
+    }
+  };
+
+  // Lấy danh sách đơn hàng của người dùng đã đăng nhập
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        console.log("Fetching orders...") // Log để debug
-        const response = await api.get("/api/donhang")
-        console.log("Orders response:", response.data) // Log để debug
+        const maKhachHang = localStorage.getItem("MaAdmin");
+        
+        if (!maKhachHang) {
+          setError("Vui lòng đăng nhập để xem đơn hàng");
+          setLoading(false);
+          navigate('/login');
+          return;
+        }
+
+        // Lấy tất cả đơn hàng
+        const response = await api.get("/api/donhang");
+
         if (response.data) {
-          setOrders(response.data)
+          // Lấy thông tin đơn hàng từ localStorage
+          const lastOrderInfo = JSON.parse(localStorage.getItem('lastOrderInfo') || '{}');
+
+          // Lọc đơn hàng theo MaKhachHang và trạng thái
+          const filteredOrders = response.data.filter(order => {
+            // Chuyển đổi MaKhachHang thành số để so sánh
+            const orderMaKhachHang = parseInt(order.MaKhachHang);
+            const userMaKhachHang = parseInt(maKhachHang);
+            
+            // Kiểm tra trạng thái đơn hàng
+            const isCompleted = order.TrangThai === "hoan thanh";
+            const isPending = order.TrangThai === "Cho xu ly";
+            
+            // Nếu là đơn hoàn thành, chuyển trạng thái thành "Giao thành công"
+            if (isCompleted) {
+              order.TrangThai = "Giao thành công";
+            }
+
+            // Nếu là đơn hàng mới nhất và chưa có thông tin chi tiết
+            if (orderMaKhachHang === userMaKhachHang && 
+                (isPending || isCompleted) && 
+                !order.TenKhachHang && 
+                lastOrderInfo.TenKhachHang) {
+              // Thêm thông tin từ localStorage
+              order.TenKhachHang = lastOrderInfo.TenKhachHang;
+              order.SoDienThoai = lastOrderInfo.SoDienThoai;
+              order.DiaChi = lastOrderInfo.DiaChi;
+              order.GhiChu = lastOrderInfo.GhiChu;
+            }
+            
+            return orderMaKhachHang === userMaKhachHang && (isPending || isCompleted);
+          });
+
+          console.log("Đơn hàng đã lọc:", filteredOrders);
+          setOrders(filteredOrders);
         } else {
-          setError("Không tìm thấy đơn hàng nào")
+          setError("Không tìm thấy đơn hàng nào");
         }
       } catch (err) {
-        console.error("Error details:", err) // Log chi tiết lỗi
-        setError("Không thể tải danh sách đơn hàng: " + (err.response?.data?.message || err.message))
+        console.error("Error details:", err);
+        setError("Không thể tải danh sách đơn hàng: " + (err.response?.data?.message || err.message));
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     }
 
-    fetchOrders()
-  }, [])
+    fetchOrders();
+  }, [navigate]);
 
   const handleConfirmOrder = async (orderId) => {
     try {
@@ -72,8 +147,8 @@ const OrderConfirmation = () => {
     return (
       <div className="error-container">
         <div className="error-message">{error}</div>
-        <button className="btn btn-primary" onClick={() => navigate('/admin/quanlydonhang')}>
-          Quay lại danh sách đơn hàng
+        <button className="btn btn-primary" onClick={() => navigate('/home')}>
+          Quay lại trang chủ
         </button>
       </div>
     )
@@ -82,23 +157,26 @@ const OrderConfirmation = () => {
   return (
     <div className="order-confirmation">
       <div className="page-header">
-        <h1>Xác nhận đơn hàng</h1>
+        <h1>Đơn hàng của tôi</h1>
       </div>
 
       <div className="orders-list">
         {orders.map((order) => {
-          const currentStep = steps.findIndex(step => step.status === order.TrangThai)
+          const currentStep = getCurrentStep(order.TrangThai);
+          const statusColor = getStatusColor(order.TrangThai);
+          
           return (
             <div key={order.MaDonHang} className="order-card">
               <div className="steps-container">
                 {steps.map((step, index) => {
-                  const isActive = index <= currentStep
+                  const isActive = index <= currentStep;
+                  const isCompleted = index < currentStep;
                   return (
                     <div key={index} className="step-item">
-                      <div className={`step-icon ${isActive ? 'active' : ''}`}>
+                      <div className={`step-icon ${isActive ? 'active' : ''} ${isCompleted ? 'completed' : ''}`}>
                         {step.icon}
                       </div>
-                      <span className="step-title">{step.title}</span>
+                      <span className={`step-title ${isActive ? 'active' : ''}`}>{step.title}</span>
                       {index < steps.length - 1 && (
                         <div className={`step-line ${isActive ? 'active' : ''}`}></div>
                       )}
@@ -135,7 +213,9 @@ const OrderConfirmation = () => {
                   </div>
                   <div className="info-item">
                     <p className="info-label">Trạng thái:</p>
-                    <p className="info-value status">{order.TrangThai}</p>
+                    <p className={`info-value status status-${statusColor}`}>
+                      {order.TrangThai}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -156,7 +236,7 @@ const OrderConfirmation = () => {
 
         {orders.length === 0 && (
           <div className="no-orders">
-            Không có đơn hàng nào cần xác nhận
+            Bạn chưa có đơn hàng nào
           </div>
         )}
       </div>

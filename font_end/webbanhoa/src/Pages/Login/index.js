@@ -12,10 +12,11 @@ const Login = () => {
   const handleLogin = async () => {
     try {
       const response = await api.post("/api/admin/login", { userName, password });
-      const { token, quyenHan } = response.data;
+      const { token, quyenHan, MaAdmin } = response.data;
       console.log(response.data);
       localStorage.setItem('token', token);
       localStorage.setItem('quyenHan', quyenHan);
+      localStorage.setItem('MaAdmin', MaAdmin);
       console.log('jwt token:', token);
       alert('Login successful');
 

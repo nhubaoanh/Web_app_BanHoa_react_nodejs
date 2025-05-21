@@ -54,7 +54,11 @@ const adminController = {
           // Cập nhật trạng thái của người dùng hiện tại thành 1
           admin.updateStatus(user.MaAdmin, 1, (err) => {
             if (err) return res.status(500).send('Internal server error');
-            res.send({ token, quyenHan: user.QuyenHan });
+            res.send({ 
+              token, 
+              quyenHan: user.QuyenHan,
+              MaAdmin: user.MaAdmin
+            });
           });
         });
       } else {
@@ -80,16 +84,23 @@ const adminController = {
       const decoded = jwt.verify(token, 'gdfhghrhghthghghghghg');
       const userName = decoded.userName;
   
-      admin.findByCredentials(userName, null, (err, result) => {
+      admin.getActiveUser(userName, (err, user) => {
         if (err) return res.status(500).send('Internal server error');
-        if (result.length > 0) {
-          const user = result[0];
-          res.send({ HoTen: user.HoTen, TrangThai: user.TrangThai });
-        } else {
-          res.status(404).send('User not found');
+        if (!user) {
+          return res.status(404).send('User not found or not active');
         }
+
+        // Trả về thông tin người dùng đang đăng nhập
+        res.send({
+          MaKhachHang: user.MaAdmin,
+          HoTen: user.HoTen,
+          Email: user.Email,
+          TrangThai: user.TrangThai,
+          TenDangNhap: user.TenDangNhap
+        });
       });
     } catch (error) {
+      console.error('Token verification error:', error);
       res.status(401).send('Invalid token');
     }
   },

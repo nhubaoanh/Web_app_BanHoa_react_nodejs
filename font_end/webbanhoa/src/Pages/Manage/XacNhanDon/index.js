@@ -18,6 +18,26 @@ const OrderConfirmation = () => {
     { title: "Giao thành công", icon: "📦", status: "Giao thành công" },
   ]
 
+  // Kiểm tra đăng nhập ngay khi component được mount
+  useEffect(() => {
+    const checkLogin = () => {
+      const maAdmin = localStorage.getItem("MaAdmin");
+      const token = localStorage.getItem("token");
+      
+      if (!maAdmin || !token) {
+        setError("Vui lòng đăng nhập để xem đơn hàng");
+        setLoading(false);
+        navigate('/login');
+        return false;
+      }
+      return true;
+    };
+
+    if (!checkLogin()) {
+      return;
+    }
+  }, [navigate]);
+
   // Hàm xác định trạng thái hiện tại của đơn hàng
   const getCurrentStep = (status) => {
     switch (status) {
@@ -55,13 +75,17 @@ const OrderConfirmation = () => {
     const fetchOrders = async () => {
       try {
         const maKhachHang = localStorage.getItem("MaAdmin");
+        const token = localStorage.getItem("token");
         
-        if (!maKhachHang) {
+        if (!maKhachHang || !token) {
           setError("Vui lòng đăng nhập để xem đơn hàng");
           setLoading(false);
           navigate('/login');
           return;
         }
+
+        // Thêm token vào header của request
+        api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
         // Lấy tất cả đơn hàng
         const response = await api.get("/api/donhang");

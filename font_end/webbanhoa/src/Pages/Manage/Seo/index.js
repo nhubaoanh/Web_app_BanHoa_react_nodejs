@@ -120,7 +120,7 @@ const Seo = () => {
       <table className="table">
         <thead>
           <tr>
-            <th>Id</th>
+            <th>STT</th>
             <th>Name</th>
             <th>Discount</th>
             <th>Start Date</th>
@@ -130,9 +130,9 @@ const Seo = () => {
           </tr>
         </thead>
         <tbody>
-          {filteredItems.slice(offset, offset + itemsPerPage).map((item) => (
+            {filteredItems.slice(offset, offset + itemsPerPage).map((item, index) => (
             <tr key={item.MaKhuyenMai}>
-              <td>{item.MaKhuyenMai}</td>
+              <td>{offset + index + 1}</td>
               <td>{item.TenKhuyenMai}</td>
               <td>{item.GiamGia}%</td>
               <td>{item.NgayBatDau}</td>

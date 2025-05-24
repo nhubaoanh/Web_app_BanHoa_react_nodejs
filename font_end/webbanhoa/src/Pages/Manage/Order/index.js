@@ -183,7 +183,7 @@ const Orders = () => {
         <table className="table">
           <thead>
             <tr>
-              <th>Id</th>
+              <th>STT</th>
               <th>ID khách hàng</th>
               <th>Ngày đặt hàng</th>
               <th>Tổng tiền</th>
@@ -192,9 +192,9 @@ const Orders = () => {
             </tr>
           </thead>
           <tbody>
-            {currentItems.map((item) => (
+            {currentItems.map((item, index) => (
               <tr key={item.MaDonHang}>
-                <td>{item.MaDonHang}</td>
+                <td>{offset + index + 1}</td>
                 <td>{item.MaKhachHang}</td>
                 <td>{item.NgayDatHang}</td>
                 <td>{item.TongTien}</td>

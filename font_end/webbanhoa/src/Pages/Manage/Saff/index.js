@@ -118,7 +118,7 @@ const Saff = () => {
         <table className="table">
           <thead>
             <tr>
-              <th>Id</th>
+              <th>STT</th>
               <th>Name</th>
               <th>Number Phone</th>
               <th>Email</th>
@@ -130,10 +130,10 @@ const Saff = () => {
           </thead>
           <tbody>
             {
-                filterItems.map((item) => {
+                filterItems.map((item, index) => {
                     return (
                         <tr key={item.MaNhanVien}>
-                            <td>{item.MaNhanVien}</td>
+                            <td>{offset + index + 1}</td>
                             <td>{item.HoTen}</td>
                             <td>{item.SoDienThoai}</td>
                             <td>{item.Email}</td>

@@ -32,7 +32,6 @@ const Product = () => {
   
   const [searchTerm, setSearchTerm] = useState('');
   const [newProduct, setNewProduct] = useState({
-    MaSanPham: '',
     TenHoa: '',
     MaLoaiHoa: '',
     GiaBan: '',
@@ -67,8 +66,11 @@ const Product = () => {
   
   const handleAdd = () => {
     const formData = new FormData();
+    // Loại bỏ MaSanPham khi thêm mới
     Object.keys(newProduct).forEach(key => {
-      formData.append(key, newProduct[key]);
+      if (key !== 'MaSanPham') { // Không gửi MaSanPham khi thêm mới
+        formData.append(key, newProduct[key]);
+      }
     });
     if (selectedFile) {
       formData.append('HinhAnh', selectedFile);
@@ -83,9 +85,7 @@ const Product = () => {
       })
       .then((response) => {
         fetchProducts(); // Tải lại danh sách sản phẩm
-        setItems([...items, response.data]); // Cập nhật danh sách sản phẩm
         setNewProduct({
-          MaSanPham: '',
           TenHoa: '',
           MaLoaiHoa: '',
           GiaBan: '',
@@ -95,7 +95,6 @@ const Product = () => {
         }); // Reset form
         setImagePreview(null); // Reset ảnh đã chọn
         setSelectedFile(null); // Reset tệp ảnh đã chọn
-        // setItems({}); // Reset form
         console.log("Thêm sản phẩm thành công:", response.data);
       })
       .catch((error) => {
@@ -126,7 +125,6 @@ const Product = () => {
         setItems(updatedItems); // Cập nhật danh sách sản phẩm
         fetchProducts(); // Tải lại danh sách sản phẩm
         setNewProduct({
-          MaSanPham: '',
           TenHoa: '',
           MaLoaiHoa: '',
           GiaBan: '',
@@ -202,11 +200,23 @@ const Product = () => {
             Search
           </label>
         </div>
-        <button className="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#productModal" onClick={() => { setAction('add'); setNewProduct({ MaSanPham: '', TenHoa: '', MaLoaiHoa: '', GiaBan: '', MoTa: '', HinhAnh: '', NgayThem: '' }); setImagePreview(null); setSelectedFile(null); }}>Thêm sản phẩm</button>
+        <button className="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#productModal" onClick={() => { 
+          setAction('add'); 
+          setNewProduct({ 
+            TenHoa: '', 
+            MaLoaiHoa: '', 
+            GiaBan: '', 
+            MoTa: '', 
+            HinhAnh: '', 
+            NgayThem: '' 
+          }); 
+          setImagePreview(null); 
+          setSelectedFile(null); 
+        }}>Thêm sản phẩm</button>
         <table className="table">
           <thead>
             <tr>
-              {/* <th>Id</th>   */}
+              <th>STT</th>  
               <th>Name</th>
               <th>Id Type Flower</th>
               <th>Price</th>
@@ -217,12 +227,12 @@ const Product = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredItems.slice(offset, offset + itemsPerPage).map((item) => (
+            {filteredItems.slice(offset, offset + itemsPerPage).map((item, index) => (
               <tr key={item.MaSanPham}>
-                {/* <td>{item.MaSanPham}</td> */}
+                <td>{offset + index + 1}</td>
                 <td>{item.TenHoa}</td>
                 <td>{item.MaLoaiHoa}</td>
-                <td>{item.GiaBan}.Number</td>
+                <td>{Number(item.GiaBan).toLocaleString('vi-VN')} VND</td>
                 <td>{item.MoTa}</td>
                 <td><img src={`http://localhost:8080/${item.HinhAnh}`} alt={item.TenHoa} style={{ width: '100px', height: '100px' }} /></td>
                 <td>{item.NgayThem}</td>
@@ -263,10 +273,6 @@ const Product = () => {
             </div>
             <div className="modal-body">
               <form>
-                <div className="mb-3">
-                  <label htmlFor="MaSanPham" className="form-label">Mã Sản Phẩm</label>
-                  <input type="text" className="form-control" id="MaSanPham" name="MaSanPham" value={newProduct.MaSanPham} onChange={handleChange} disabled={action !== 'add'} />
-                </div>
                 {action !== 'delete' && (
                   <>
                     <div className="mb-3">
@@ -278,8 +284,16 @@ const Product = () => {
                       <input type="text" className="form-control" id="MaLoaiHoa" name="MaLoaiHoa" value={newProduct.MaLoaiHoa} onChange={handleChange} />
                     </div>
                     <div className="mb-3">
-                      <label htmlFor="GiaBan" className="form-label">Giá Bán</label>
-                      <input type="text" className="form-control" id="GiaBan" name="GiaBan" value={newProduct.GiaBan} onChange={handleChange} />
+                      <label htmlFor="GiaBan" className="form-label">Giá Bán (VND)</label>
+                      <input 
+                        type="number" 
+                        className="form-control" 
+                        id="GiaBan" 
+                        name="GiaBan" 
+                        value={newProduct.GiaBan} 
+                        onChange={handleChange}
+                        placeholder="Nhập giá bán" 
+                      />
                     </div>
                     <div className="mb-3">
                       <label htmlFor="MoTa" className="form-label">Mô Tả</label>

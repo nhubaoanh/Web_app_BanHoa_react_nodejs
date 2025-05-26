@@ -55,15 +55,30 @@ const donhangController = {
   }
   ,
   getTopSanPhamBanChay: (req, res) => {
-    const soLuong = req.query.soluong || 5;
+    const soLuong = parseInt(req.query.soluong) || 5;
+    
+    if (isNaN(soLuong) || soLuong <= 0) {
+      return res.status(400).json({ 
+        success: false, 
+        message: "Số lượng không hợp lệ. Vui lòng nhập số dương." 
+      });
+    }
 
     donhang.getTopSanphamBanChay(soLuong, (err, result) => {
       if (err) {
         console.error("Error fetching top selling products:", err);
-        return res.status(500).send({ message: "Error fetching top selling products", error: err });
+        return res.status(500).json({ 
+          success: false,
+          message: "Lỗi khi lấy dữ liệu sản phẩm bán chạy", 
+          error: err.message 
+        });
       }
-      console.log("Kết quả trả về từ stored procedure:", result); //
-      res.json(result); // 
+
+      res.json({
+        success: true,
+        data: result,
+        total: result.length
+      });
     });
   }
 };

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import api from "../../services/api";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./Home.css";
 
 const Home = () => {
@@ -8,6 +8,7 @@ const Home = () => {
   const [selectedProduct, setSelectedProduct] = useState([]);
   const [searchTerm, setSearchTerm] = useState(""); // State để lưu giá trị tìm kiếm
   const location = useLocation();
+  const navigate = useNavigate();
 
   // Lấy MaLoaiHoa từ URL
   const queryParams = new URLSearchParams(location.search);
@@ -41,7 +42,12 @@ const Home = () => {
     api
       .get(`/api/sanpham/${productId}`)
       .then((response) => {
-        setSelectedProduct(response.data);
+        console.log('Product data:', response.data);
+        // Lấy phần tử đầu tiên của mảng và lưu vào localStorage
+        const productData = Array.isArray(response.data) ? response.data[0] : response.data;
+        localStorage.setItem('selectedProduct', JSON.stringify(productData));
+        // Sử dụng navigate để chuyển trang
+        navigate(`/product/${productId}`);
       })
       .catch((error) => {
         console.error("Lỗi khi lấy thông tin sản phẩm:", error);
@@ -84,9 +90,6 @@ const Home = () => {
                   <div
                     className="bg-image hover-zoom ripple"
                     data-mdb-ripple-color="light"
-                    onClick={() => handleProductClick(product.MaSanPham)}
-                    data-bs-toggle="modal"
-                    data-bs-target="#productModal"
                   >
                     <img
                       className="custom-img"
@@ -96,15 +99,18 @@ const Home = () => {
                           : "https://via.placeholder.com/150"
                       }
                       alt={product.TenHoa || "No name"}
+                      onClick={() => handleProductClick(product.MaSanPham)}
+                      style={{ cursor: 'pointer' }}
                     />
                   </div>
                   <div className="card-body">
-                    <Link
-                      className="text-reset"
-                      to={`/product/${product.MaSanPham}`}
+                    <h5 
+                      className="card-title mb-2"
+                      onClick={() => handleProductClick(product.MaSanPham)}
+                      style={{ cursor: 'pointer' }}
                     >
-                      <h5 className="card-title mb-2">{product.TenHoa}</h5>
-                    </Link>
+                      {product.TenHoa}
+                    </h5>
                     <p>{product.category}</p>
                     <h6 className="mb-2">
                       <strong className="ms-2 text-danger">

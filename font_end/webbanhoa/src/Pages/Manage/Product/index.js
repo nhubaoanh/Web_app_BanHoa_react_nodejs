@@ -3,35 +3,50 @@ import api from '../../../services/api';
 import { useNavigate } from "react-router-dom";
 // thêm thư viện này vào để chuyển trang
 import ReactPaginate from 'react-paginate';
-const Product = () => {
-  const navigate = useNavigate();
 
+// Custom hook for product management
+const useProductManagement = () => {
   const [items, setItems] = useState([]);
-    const [currentPage, setCurrentPage] = useState(0);
-    const itemsPerPage = 10;
-    const offset = currentPage * itemsPerPage;
-    const currentItems = items.slice(offset, offset + itemsPerPage);
-    const pageCount = Math.ceil(items.length / itemsPerPage);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [searchTerm, setSearchTerm] = useState('');
+  const itemsPerPage = 10;
 
-  // Hàm kiểm tra đăng nhập
-  const checkLogin = () => {
-    if (!localStorage.getItem("token")) {
-      navigate("/login");
+  const fetchProducts = async () => {
+    try {
+      const response = await api.get("/api/sanpham");
+      setItems(response.data);
+    } catch (error) {
+      console.error("Lỗi khi lấy danh sách sản phẩm:", error);
     }
   };
 
-  const handlePageClick = (event) => {
-    setCurrentPage(event.selected);
-  };
-
-  // Kiểm tra đăng nhập khi component được render lần đầu
   useEffect(() => {
-    checkLogin();
+    fetchProducts();
   }, []);
 
-  
-  const [searchTerm, setSearchTerm] = useState('');
-  const [newProduct, setNewProduct] = useState({
+  const filteredItems = items.filter(item => 
+    item.TenHoa?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const offset = currentPage * itemsPerPage;
+  const currentItems = filteredItems.slice(offset, offset + itemsPerPage);
+  const pageCount = Math.ceil(filteredItems.length / itemsPerPage);
+
+  return {
+    items,
+    currentItems,
+    pageCount,
+    currentPage,
+    searchTerm,
+    setSearchTerm,
+    setCurrentPage,
+    fetchProducts
+  };
+};
+
+// Custom hook for form management
+const useProductForm = (fetchProducts) => {
+  const [formData, setFormData] = useState({
     TenHoa: '',
     MaLoaiHoa: '',
     GiaBan: '',
@@ -39,128 +54,13 @@ const Product = () => {
     HinhAnh: '',
     NgayThem: ''
   });
-  const [action, setAction] = useState('add'); // Quản lý trạng thái hành động (add, edit, delete)
-  const [imagePreview, setImagePreview] = useState(null); // State để lưu trữ URL của ảnh đã chọn
-  const [selectedFile, setSelectedFile] = useState(null); // State để lưu trữ tệp ảnh đã chọn
-
-    // Hàm lấy danh sách sản phẩm
-    const fetchProducts = () => {
-      api
-        .get("/api/sanpham")
-        .then((response) => {
-          setItems(response.data); // Lưu dữ liệu vào state
-        })
-        .catch((error) => {
-          console.log("Lỗi khi lấy danh sách sản phẩm:", error);
-        });
-    };
-  
-    // Gọi API để lấy danh sách sản phẩm khi component được render lần đầu
-    useEffect(() => {
-      fetchProducts();
-    }, []);
-
-    const filteredItems = Array.isArray(items) 
-    ? items.filter(item => item.TenHoa && item.TenHoa.toLowerCase().includes(searchTerm.toLowerCase()))
-    : [];
-  
-  const handleAdd = () => {
-    const formData = new FormData();
-    // Loại bỏ MaSanPham khi thêm mới
-    Object.keys(newProduct).forEach(key => {
-      if (key !== 'MaSanPham') { // Không gửi MaSanPham khi thêm mới
-        formData.append(key, newProduct[key]);
-      }
-    });
-    if (selectedFile) {
-      formData.append('HinhAnh', selectedFile);
-    }
-
-    // Gửi thông tin sản phẩm mới đến backend
-    api
-      .post("/api/sanpham", formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      })
-      .then((response) => {
-        fetchProducts(); // Tải lại danh sách sản phẩm
-        setNewProduct({
-          TenHoa: '',
-          MaLoaiHoa: '',
-          GiaBan: '',
-          MoTa: '',
-          HinhAnh: '',
-          NgayThem: ''
-        }); // Reset form
-        setImagePreview(null); // Reset ảnh đã chọn
-        setSelectedFile(null); // Reset tệp ảnh đã chọn
-        console.log("Thêm sản phẩm thành công:", response.data);
-      })
-      .catch((error) => {
-        console.log("Lỗi khi thêm sản phẩm:", error);
-      });
-  };
-
-  const handleEdit = () => {
-    const formData = new FormData();
-    Object.keys(newProduct).forEach(key => {
-      formData.append(key, newProduct[key]);
-    });
-    if (selectedFile) {
-      formData.append('HinhAnh', selectedFile);
-    }
-
-    // Gửi thông tin sản phẩm mới đến backend
-    api
-      .put(`/api/sanpham/${newProduct.MaSanPham}`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      })
-      .then((response) => {
-        const updatedItems = items.map(item =>
-          item.MaSanPham === newProduct.MaSanPham ? response.data : item
-        );
-        setItems(updatedItems); // Cập nhật danh sách sản phẩm
-        fetchProducts(); // Tải lại danh sách sản phẩm
-        setNewProduct({
-          TenHoa: '',
-          MaLoaiHoa: '',
-          GiaBan: '',
-          MoTa: '',
-          HinhAnh: '',
-          NgayThem: ''
-        }); // Reset form
-        setImagePreview(null); // Reset ảnh đã chọn
-        setSelectedFile(null); // Reset tệp ảnh đã chọn
-        console.log("Sửa sản phẩm thành công:", response.data);
-      })
-      .catch((error) => {
-        console.log("Lỗi khi sửa sản phẩm:", error);
-      });
-  };
-
-  const handleDelete = () => {
-    console.log("MaSanPham cần xóa:", newProduct.MaSanPham); // Kiểm tra giá trị
-    if (!newProduct.MaSanPham) {
-      console.error("Không có MaSanPham để xóa!");
-      return;
-    }    api
-      .delete(`/api/sanpham/${newProduct.MaSanPham}`)
-      .then((response) => {
-        console.log("Xóa sản phẩm thành công:", response.data);
-        const updatedItems = items.filter(item => item.MaSanPham !== newProduct.MaSanPham);
-        setItems(updatedItems); // Cập nhật danh sách sản phẩm
-      })
-      .catch((error) => {
-        console.log("Lỗi khi xóa sản phẩm:", error);
-      });
-  };
+  const [imagePreview, setImagePreview] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [action, setAction] = useState('add');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setNewProduct({ ...newProduct, [name]: value });
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleImageChange = (e) => {
@@ -168,153 +68,349 @@ const Product = () => {
     if (file) {
       setSelectedFile(file);
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
+      reader.onloadend = () => setImagePreview(reader.result);
       reader.readAsDataURL(file);
     }
   };
 
-  const handleSubmit = () => {
-    if (action === 'add') {
-      handleAdd();
-    } else if (action === 'edit') {
-      handleEdit();
-    } else if (action === 'delete') {
-      handleDelete();
+  const resetForm = () => {
+    setFormData({
+      TenHoa: '',
+      MaLoaiHoa: '',
+      GiaBan: '',
+      MoTa: '',
+      HinhAnh: '',
+      NgayThem: ''
+    });
+    setImagePreview(null);
+    setSelectedFile(null);
+  };
+
+  const handleSubmit = async () => {
+    const formDataToSend = new FormData();
+    Object.keys(formData).forEach(key => {
+      if (key !== 'MaSanPham' || action === 'edit') {
+        formDataToSend.append(key, formData[key]);
+      }
+    });
+    if (selectedFile) {
+      formDataToSend.append('HinhAnh', selectedFile);
+    }
+
+    try {
+      switch (action) {
+        case 'add':
+          await api.post("/api/sanpham", formDataToSend, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+          });
+          break;
+        case 'edit':
+          await api.put(`/api/sanpham/${formData.MaSanPham}`, formDataToSend, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+          });
+          break;
+        case 'delete':
+          await api.delete(`/api/sanpham/${formData.MaSanPham}`);
+          break;
+      }
+      fetchProducts();
+      resetForm();
+    } catch (error) {
+      console.error(`Lỗi khi ${action} sản phẩm:`, error);
     }
   };
 
-  return (
-    <div>
-      <div className='container'>
-        <div className="form-outline mb-4">
-          <input
-            type="text"
-            className="form-control"
-            id="datatable-search-input"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <label className="form-label" htmlFor="datatable-search-input">
-            Search
-          </label>
+  return {
+    formData,
+    imagePreview,
+    action,
+    setAction,
+    setFormData,
+    handleChange,
+    handleImageChange,
+    handleSubmit,
+    resetForm
+  };
+};
+
+// Product Table Component
+const ProductTable = ({ items, onEdit, onDelete }) => (
+  <table className="table">
+    <thead>
+      <tr>
+        <th>STT</th>
+        <th>Name</th>
+        <th>Id Type Flower</th>
+        <th>Price</th>
+        <th>Mo ta</th>
+        <th>Images</th>
+        <th>Date Add</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {items.map((item, index) => (
+        <tr key={item.MaSanPham}>
+          <td>{index + 1}</td>
+          <td>{item.TenHoa}</td>
+          <td>{item.MaLoaiHoa}</td>
+          <td>{Number(item.GiaBan).toLocaleString('vi-VN')} VND</td>
+          <td>{item.MoTa}</td>
+          <td>
+            <img 
+              src={`http://localhost:8080/${item.HinhAnh}`} 
+              alt={item.TenHoa} 
+              style={{ width: '100px', height: '100px' }} 
+            />
+          </td>
+          <td>{item.NgayThem}</td>
+          <td>
+            <button 
+              className="btn btn-warning me-2" 
+              data-bs-toggle="modal" 
+              data-bs-target="#productModal" 
+              onClick={() => onEdit(item)}
+            >
+              Sửa
+            </button>
+            <button 
+              className="btn btn-danger" 
+              data-bs-toggle="modal" 
+              data-bs-target="#productModal" 
+              onClick={() => onDelete(item)}
+            >
+              Xóa
+            </button>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+);
+
+// Product Form Modal Component
+const ProductModal = ({ 
+  action, 
+  formData, 
+  imagePreview, 
+  handleChange, 
+  handleImageChange, 
+  handleSubmit 
+}) => (
+  <div className="modal fade" id="productModal" tabIndex="-1" aria-hidden="true">
+    <div className="modal-dialog">
+      <div className="modal-content">
+        <div className="modal-header">
+          <h5 className="modal-title">
+            {action === 'add' && 'Thêm sản phẩm mới'}
+            {action === 'edit' && 'Sửa sản phẩm'}
+            {action === 'delete' && 'Xóa sản phẩm'}
+          </h5>
+          <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <button className="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#productModal" onClick={() => { 
-          setAction('add'); 
-          setNewProduct({ 
-            TenHoa: '', 
-            MaLoaiHoa: '', 
-            GiaBan: '', 
-            MoTa: '', 
-            HinhAnh: '', 
-            NgayThem: '' 
-          }); 
-          setImagePreview(null); 
-          setSelectedFile(null); 
-        }}>Thêm sản phẩm</button>
-        <table className="table">
-          <thead>
-            <tr>
-              <th>STT</th>  
-              <th>Name</th>
-              <th>Id Type Flower</th>
-              <th>Price</th>
-              <th>Mo ta</th>
-              <th>Images</th>
-              <th>Date Add</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredItems.slice(offset, offset + itemsPerPage).map((item, index) => (
-              <tr key={item.MaSanPham}>
-                <td>{offset + index + 1}</td>
-                <td>{item.TenHoa}</td>
-                <td>{item.MaLoaiHoa}</td>
-                <td>{Number(item.GiaBan).toLocaleString('vi-VN')} VND</td>
-                <td>{item.MoTa}</td>
-                <td><img src={`http://localhost:8080/${item.HinhAnh}`} alt={item.TenHoa} style={{ width: '100px', height: '100px' }} /></td>
-                <td>{item.NgayThem}</td>
-                <td>
-                  <button className="btn btn-warning me-2" data-bs-toggle="modal" data-bs-target="#productModal" onClick={() => { setAction('edit'); setNewProduct(item); setImagePreview(`/${item.HinhAnh}`); setSelectedFile(null); }}>Sửa</button>
-                  <button className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#productModal" onClick={() => { setAction('delete'); setNewProduct(item); setImagePreview(null); setSelectedFile(null); }}>Xóa</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <ReactPaginate
-          previousLabel={'Previous'}
-          nextLabel={'Next'}
-          breakLabel={'...'}
-          breakClassName={'break-me'}
-          pageCount={pageCount}
-          marginPagesDisplayed={2}
-          pageRangeDisplayed={5}
-          onPageChange={handlePageClick}
-          containerClassName={'pagination'}
-          subContainerClassName={'pages pagination'}
-          activeClassName={'active'}
+        <div className="modal-body">
+          {action !== 'delete' && (
+            <form>
+              <div className="mb-3">
+                <label htmlFor="TenHoa" className="form-label">Tên Hoa</label>
+                <input 
+                  type="text" 
+                  className="form-control" 
+                  id="TenHoa" 
+                  name="TenHoa" 
+                  value={formData.TenHoa} 
+                  onChange={handleChange} 
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="MaLoaiHoa" className="form-label">Mã Loại Hoa</label>
+                <input 
+                  type="text" 
+                  className="form-control" 
+                  id="MaLoaiHoa" 
+                  name="MaLoaiHoa" 
+                  value={formData.MaLoaiHoa} 
+                  onChange={handleChange} 
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="GiaBan" className="form-label">Giá Bán (VND)</label>
+                <input 
+                  type="number" 
+                  className="form-control" 
+                  id="GiaBan" 
+                  name="GiaBan" 
+                  value={formData.GiaBan} 
+                  onChange={handleChange}
+                  placeholder="Nhập giá bán" 
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="MoTa" className="form-label">Mô Tả</label>
+                <input 
+                  type="text" 
+                  className="form-control" 
+                  id="MoTa" 
+                  name="MoTa" 
+                  value={formData.MoTa} 
+                  onChange={handleChange} 
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="HinhAnh" className="form-label">Hình Ảnh</label>
+                <input 
+                  type="file" 
+                  className="form-control" 
+                  id="HinhAnh" 
+                  name="HinhAnh" 
+                  onChange={handleImageChange} 
+                />
+                {imagePreview && (
+                  <img 
+                    src={imagePreview} 
+                    alt="Preview" 
+                    style={{ width: '100px', height: '100px', marginTop: '10px' }} 
+                  />
+                )}
+              </div>
+              <div className="mb-3">
+                <label htmlFor="NgayThem" className="form-label">Ngày Thêm</label>
+                <input 
+                  type="date" 
+                  className="form-control" 
+                  id="NgayThem" 
+                  name="NgayThem" 
+                  value={formData.NgayThem} 
+                  onChange={handleChange} 
+                />
+              </div>
+            </form>
+          )}
+        </div>
+        <div className="modal-footer">
+          <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+          <button 
+            type="button" 
+            className="btn btn-primary" 
+            onClick={handleSubmit} 
+            data-bs-dismiss="modal"
+          >
+            {action === 'add' && 'Thêm sản phẩm'}
+            {action === 'edit' && 'Sửa sản phẩm'}
+            {action === 'delete' && 'Xóa sản phẩm'}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+// Main Product Component
+const Product = () => {
+  const navigate = useNavigate();
+  const {
+    currentItems,
+    pageCount,
+    currentPage,
+    searchTerm,
+    setSearchTerm,
+    setCurrentPage,
+    fetchProducts
+  } = useProductManagement();
+
+  const {
+    formData,
+    imagePreview,
+    action,
+    setAction,
+    setFormData,
+    handleChange,
+    handleImageChange,
+    handleSubmit,
+    resetForm
+  } = useProductForm(fetchProducts);
+
+  useEffect(() => {
+    if (!localStorage.getItem("token")) {
+      navigate("/login");
+    }
+  }, [navigate]);
+
+  const handlePageClick = (event) => {
+    setCurrentPage(event.selected);
+  };
+
+  const handleEdit = (item) => {
+    setAction('edit');
+    setFormData(item);
+    setImagePreview(`/${item.HinhAnh}`);
+  };
+
+  const handleDelete = (item) => {
+    setAction('delete');
+    setFormData(item);
+  };
+
+  return (
+    <div className="container">
+      <div className="form-outline mb-4">
+        <input
+          type="text"
+          className="form-control"
+          id="datatable-search-input"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
         />
+        <label className="form-label" htmlFor="datatable-search-input">
+          Search
+        </label>
       </div>
 
-      {/* Modal for adding, editing, and deleting product */}
-      <div className="modal fade" id="productModal" tabIndex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title" id="productModalLabel">
-                {action === 'add' && 'Thêm sản phẩm mới'}
-                {action === 'edit' && 'Sửa sản phẩm'}
-                {action === 'delete' && 'Xóa sản phẩm'}
-              </h5>
-              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div className="modal-body">
-              <form>
-                {action !== 'delete' && (
-                  <>
-                    <div className="mb-3">
-                      <label htmlFor="TenHoa" className="form-label">Tên Hoa</label>
-                      <input type="text" className="form-control" id="TenHoa" name="TenHoa" value={newProduct.TenHoa} onChange={handleChange} />
-                    </div>
-                    <div className="mb-3">
-                      <label htmlFor="MaLoaiHoa" className="form-label">Mã Loại Hoa</label>
-                      <input type="text" className="form-control" id="MaLoaiHoa" name="MaLoaiHoa" value={newProduct.MaLoaiHoa} onChange={handleChange} />
-                    </div>
-                    <div className="mb-3">
-                      <label htmlFor="GiaBan" className="form-label">Giá Bán (VND)</label>
-                      <input 
-                        type="number" 
-                        className="form-control" 
-                        id="GiaBan" 
-                        name="GiaBan" 
-                        value={newProduct.GiaBan} 
-                        onChange={handleChange}
-                        placeholder="Nhập giá bán" 
-                      />
-                    </div>
-                    <div className="mb-3">
-                      <label htmlFor="MoTa" className="form-label">Mô Tả</label>
-                      <input type="text" className="form-control" id="MoTa" name="MoTa" value={newProduct.MoTa} onChange={handleChange} />
-                    </div>
-                    <div className="mb-3">
-                      <label htmlFor="HinhAnh" className="form-label">Hình Ảnh</label>
-                      <input type="file" className="form-control" id="HinhAnh" name="HinhAnh" onChange={handleImageChange} />
-                      {imagePreview && <img src={imagePreview} alt="Preview" style={{ width: '100px', height: '100px', marginTop: '10px' }} />}
-                    </div>
-                    <div className="mb-3">
-                      <label htmlFor="NgayThem" className="form-label">Ngày Thêm</label>
-                      <input type="date" className="form-control" id="NgayThem" name="NgayThem" value={newProduct.NgayThem} onChange={handleChange} />
-                    </div>
-                  </>
-                )}
-              </form>
-            </div>
-            <div className="modal-footer">
-              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-              <button type="button" className="btn btn-primary" onClick={handleSubmit} data-bs-dismiss="modal">
+      <button 
+        className="btn btn-primary mb-3" 
+        data-bs-toggle="modal" 
+        data-bs-target="#productModal" 
+        onClick={() => {
+          setAction('add');
+          resetForm();
+        }}
+      >
+        Thêm sản phẩm
+      </button>
+
+      <ProductTable 
+        items={currentItems}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+      />
+
+      <ReactPaginate
+        previousLabel={'Previous'}
+        nextLabel={'Next'}
+        breakLabel={'...'}
+        breakClassName={'break-me'}
+        pageCount={pageCount}
+        marginPagesDisplayed={2}
+        pageRangeDisplayed={5}
+        onPageChange={handlePageClick}
+        containerClassName={'pagination'}
+        subContainerClassName={'pages pagination'}
+        activeClassName={'active'}
+      />
+
+      <ProductModal
+        action={action}
+        formData={formData}
+        imagePreview={imagePreview}
+        handleChange={handleChange}
+        handleImageChange={handleImageChange}
+        handleSubmit={handleSubmit}
+      />
+    </div>
+  );
+};
+
+export default Product;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          on type="button" className="btn btn-primary" onClick={handleSubmit} data-bs-dismiss="modal">
                 {action === 'add' && 'Thêm sản phẩm'}
                 {action === 'edit' && 'Sửa sản phẩm'}
                 {action === 'delete' && 'Xóa sản phẩm'}

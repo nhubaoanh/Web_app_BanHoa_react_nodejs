@@ -138,8 +138,14 @@ donhang.createOrderWithDetails = (orderData, callback) => {
 donhang.getTopSanphamBanChay = (SoLuong, callback) => {
   const sqlString = `CALL TopSanPhamBanChay(?)`;
   db.query(sqlString, [SoLuong], (err, result) => {
-    if (err) return callback(err);
-    callback(null,result[0]);
+    if (err) {
+      console.error("Error in getTopSanphamBanChay:", err);
+      return callback(err);
+    }
+    if (!result || !result[0]) {
+      return callback(new Error("No data returned from stored procedure"));
+    }
+    callback(null, result[0]);
   });
 };
 

@@ -5,8 +5,13 @@ import "./Home.css";
 
 const Home = () => {
   const [products, setProducts] = useState([]);
-  const [selectedProduct, setSelectedProduct] = useState([]);
+  // const [selectedProduct, setSelectedProduct] = useState([]);
   const [searchTerm, setSearchTerm] = useState(""); // State để lưu giá trị tìm kiếm
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [messages, setMessages] = useState([
+    { text: "Xin chào! Tôi có thể giúp gì cho bạn?", isBot: true }
+  ]);
+  const [newMessage, setNewMessage] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -58,6 +63,40 @@ const Home = () => {
     const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
     cartItems.push(product);
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
+  };
+
+  const handleSendMessage = () => {
+    if (newMessage.trim() === "") return;
+
+    // Add user message
+    setMessages(prev => [...prev, { text: newMessage, isBot: false }]);
+    
+    // Simulate bot response (you can replace this with actual API calls)
+    setTimeout(() => {
+      const botResponse = getBotResponse(newMessage);
+      setMessages(prev => [...prev, { text: botResponse, isBot: true }]);
+    }, 1000);
+
+    setNewMessage("");
+  };
+
+  const getBotResponse = (message) => {
+    const lowerMessage = message.toLowerCase();
+    
+    if (lowerMessage.includes("giá") || lowerMessage.includes("bao nhiêu")) {
+      return "Giá sản phẩm được hiển thị trên từng sản phẩm. Bạn có thể xem chi tiết bằng cách click vào sản phẩm.";
+    }
+    if (lowerMessage.includes("mua") || lowerMessage.includes("đặt hàng")) {
+      return "Bạn có thể thêm sản phẩm vào giỏ hàng bằng nút 'Mua ngay' hoặc click vào sản phẩm để xem chi tiết.";
+    }
+    if (lowerMessage.includes("chào") || lowerMessage.includes("hello")) {
+      return "Xin chào! Tôi có thể giúp gì cho bạn?";
+    }
+    if (lowerMessage.includes("cảm ơn")) {
+      return "Không có gì! Nếu bạn cần thêm thông tin, đừng ngại hỏi nhé!";
+    }
+    
+    return "Xin lỗi, tôi không hiểu câu hỏi của bạn. Bạn có thể hỏi về giá cả, cách mua hàng, hoặc thông tin sản phẩm.";
   };
 
   return (
@@ -143,7 +182,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Modal */}
+      {/* Modal
       <div
         className="modal fade"
         id="productModal"
@@ -212,6 +251,51 @@ const Home = () => {
             </div>
           </div>
         </div>
+      </div> */}
+
+      {/* Chatbot */}
+      <div className="chatbot-container">
+        {isChatOpen && (
+          <div className="chat-window">
+            <div className="chat-header">
+              <h5>Chat với chúng tôi</h5>
+              <button 
+                className="close-btn"
+                onClick={() => setIsChatOpen(false)}
+              >
+                ×
+              </button>
+            </div>
+            <div className="chat-messages">
+              {messages.map((message, index) => (
+                <div
+                  key={index}
+                  className={`message ${message.isBot ? "bot" : "user"}`}
+                >
+                  {message.text}
+                </div>
+              ))}
+            </div>
+            <div className="chat-input">
+              <input
+                type="text"
+                value={newMessage}
+                onChange={(e) => setNewMessage(e.target.value)}
+                placeholder="Nhập tin nhắn..."
+                onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
+              />
+              <button onClick={handleSendMessage}>
+                <i className="fas fa-paper-plane"></i>
+              </button>
+            </div>
+          </div>
+        )}
+        <button
+          className="chat-button"
+          onClick={() => setIsChatOpen(!isChatOpen)}
+        >
+          <i className="fas fa-comments"></i>
+        </button>
       </div>
     </div>
   );

@@ -101,7 +101,7 @@ const Seo = () => {
           type="text"
           className="form-control"
           id="datatable-search-input"
-          placeholder="Tìm kiếm nhà cung cấp..."
+          placeholder="Tìm kiếm mã giảm giá..."
           onChange={(e) => setSearchTerm(e.target.value)}
         />
         <label className="form-label" htmlFor="datatable-search-input">Search</label>
@@ -186,9 +186,9 @@ const Seo = () => {
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title" id="productModalLabel">
-                {action === 'add' && 'Thêm Nhà cung cấp mới'}
-                {action === 'edit' && 'Sửa Nhà cung cấp'}
-                {action === 'delete' && 'Xóa Nhà cung cấp'}
+                {action === 'add' && 'Thêm mã giảm giá mới'}
+                {action === 'edit' && 'Sửa mã giảm giá'}
+                {action === 'delete' && 'Xóa mã giảm giá'}
               </h5>
               <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -254,15 +254,15 @@ const Seo = () => {
                   </div>
                 </form>
               ) : (
-                <p>Bạn có chắc chắn muốn xóa nhà cung cấp này?</p>
+                <p>Bạn có chắc chắn muốn xóa mã giảm giá này?</p>
               )}
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
               <button type="button" className="btn btn-primary" onClick={handleSubmit} data-bs-dismiss="modal">
-                {action === 'add' && 'Thêm Nhà cung cấp'}
-                {action === 'edit' && 'Sửa Nhà cung cấp'}
-                {action === 'delete' && 'Xóa Nhà cung cấp'}
+                {action === 'add' && 'Thêm mã giảm giá'}
+                {action === 'edit' && 'Sửa mã giảm giá'}
+                {action === 'delete' && 'Xóa mã giảm giá'}
               </button>
             </div>
           </div>

@@ -86,6 +86,7 @@ const Product = () => {
         await api.post('/api/sanpham', formDataToSend, {
           headers: { 'Content-Type': 'multipart/form-data' }
         });
+        alert('Thêm sản phẩm thành công!');
       } else if (action === 'edit') {
         await api.put(`/api/sanpham/${formData.MaSanPham}`, formDataToSend, {
           headers: { 'Content-Type': 'multipart/form-data' }
